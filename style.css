@@ -1,0 +1,33 @@
+body {
+	background-color: #222222;
+	color: white;
+	font-family: 'Futura-Medium', 'Futura', 'Trebuchet MS', sans-serif;
+}
+#main {
+	background-color: #666666;
+	width: 800px;
+	margin-left: auto ;
+	margin-right: auto ;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
+#header {
+	text-align: center;
+	font-size: 40px;
+}
+
+#showsTable {
+	padding: 10px;
+        width: 700px;
+        position: relative;
+        left: 25px;
+}
+
+#login-link {
+	float: left;
+	cursor: pointer;
+}
+
