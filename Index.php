@@ -4,7 +4,7 @@ require_once('functions.php');
 ?>
 <html>
 
-//
+
 <head>
 <link rel="stylesheet" type="text/css" href="style.css"/>
 <link title="ui-theme" rel="stylesheet" type="text/css" href="js/jquery-ui-1.8.13.custom.css" />
@@ -44,6 +44,7 @@ require_once('functions.php');
                 defaultDate: date
             });  
             $('#showsFormDialog').dialog("option", "title", "Edit Show");
+            $('#city').focus();
             $('#date').val(date);
             $('#time').val(time);
             $('#city').val(city);
