@@ -50,7 +50,6 @@ require_once('functions.php');
             $('#info').html(info);
             $('#tickets').val(tickets);
             $('#action').val('edit');
-            
             $('#showsFormDialog').dialog("open");
             $('#time').timepicker('setTime', time);
             $('#date').datepicker('setDate', date);
@@ -184,7 +183,7 @@ require_once('functions.php');
 					</tr>
 					<tr>
 						<td><input type='text' name='date' id='date' class='date'></td>
-						<td style="padding-left:20px"><input type='text' name='addTime' id='addTime' class='time'></td>
+						<td style="padding-left:20px"><input type='text' name='time' id='time' class='time'></td>
 					</tr>
 				</table>
 				<br />
