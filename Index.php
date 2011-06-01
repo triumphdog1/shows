@@ -42,30 +42,34 @@ require_once('functions.php');
             $('.date').datepicker("option", {
                 minDate: null,
                 defaultDate: date
-            });  
+            });
+            
             $('#showsFormDialog').dialog("option", "title", "Edit Show");
-            $('#city').focus();
-            $('#date').val(date);
-            $('#time').val(time);
             $('#city').val(city);
             $('#venue').val(venue);
             $('#info').html(info);
             $('#tickets').val(tickets);
-            $('#action').val("edit");
-            $('#showsFormDialog').dialog("open");     
+            $('#action').val('edit');
+            
+            $('#showsFormDialog').dialog("open");
+            $('#time').timepicker('setTime', time);
+            $('#date').datepicker('setDate', date);
+            $('#date').datepicker('hide');
+            $('#city').focus();
         }
 	
 	$(document).ready(function() {		
 		$('.date').datepicker({
 			minDate:0,
-                        dateformat: "m/d/yy",
-			defaultDate:0
+                        dateFormat: "m/d/yy",
+			defaultDate:0,
+                        constrainInput:true
 		});
 		$('.time').timepicker({
 			showPeriod: true,
 			showLeadingZero: false,
-                        timeFormat: "h:m tt",
-			defaultTime:"4:20 PM"
+                        amPmText: ['am', 'pm'],
+			defaultTime:"4:20 pm"
 		});
 		reloadTable();
 		checkLogin();
@@ -119,8 +123,10 @@ require_once('functions.php');
 			draggable: false,
 			resizable: false,
 			modal: true,
+                        showButtonPanel: true,
+                        closeText:"X",
 			buttons: {
-				"Add": function() {
+				"Submit": function() {
 					$('#showsForm').submit();
 				},
 				"Cancel": function() {
@@ -130,12 +136,11 @@ require_once('functions.php');
 		});
 		
 		$('#showsForm').submit(function(e) {
-                    $.ajaxSetup({async: false});
                     $.post('ajax.php', $('#showsForm').serialize(), function(data) {
 			if (data == 0) alert("Failed to add show!");
 			hideShowsForm();
+                        reloadTable();
                     });
-                    $.ajaxSetup({async: true});
                     e.preventDefault();
 		});
 	});
@@ -178,7 +183,7 @@ require_once('functions.php');
 						<td style="padding-left:20px">Time:</td>
 					</tr>
 					<tr>
-						<td><input type='text' name='addDate' id='addDate' class='date'></td>
+						<td><input type='text' name='date' id='date' class='date'></td>
 						<td style="padding-left:20px"><input type='text' name='addTime' id='addTime' class='time'></td>
 					</tr>
 				</table>
