@@ -100,9 +100,9 @@ if ($action == 'showsTable') {
 		$html .= "<tr valign='top'><td><span id='date$id'>$date</span><br />
 			<span id='time$id'>$time</span><br /><br /><br /></td>
 			<td><span id='city$id'>$city</span><br /><span id='venue$id'>$venue</span></td>
-			<td><span id='info$id'>$info</span></td><td style='padding-right:10px;'>
-                        <span id='tickets$id' rel='$tickets'>". ticketDisplay($tickets) . "</span></td>";
-                if ($logged_in) $html .= "<td><img src='images/edit_button.gif' class='edit_button' rel='$id' style='cursor:pointer'></td>
+			<td>$info</td><td style='padding-right:10px;'><span id='tickets$id' rel='$tickets'>"
+			. ticketDisplay($tickets) . "</span></td>";
+		if ($logged_in) $html .= "<td><img src='images/edit_button.gif' class='edit_button' rel='$id' style='cursor:pointer'></td>
 			<td><img src='images/delete_button.gif' class='delete_button' rel='$id' style='cursor:pointer'></td>";
 		$html .= "</tr>";
 	}

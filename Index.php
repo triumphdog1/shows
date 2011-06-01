@@ -1,9 +1,11 @@
 <!DOCTYPE HTML>
+<?
+require_once('functions.php');
+?>
 <html>
 
-
+//
 <head>
-<title>Shows</title>
 <link rel="stylesheet" type="text/css" href="style.css"/>
 <link title="ui-theme" rel="stylesheet" type="text/css" href="js/jquery-ui-1.8.13.custom.css" />
 <script type="text/javascript" src="js/jquery-1.6.1.min.js"></script>
@@ -36,7 +38,6 @@
 
 	}
         
-        // TODO: date, time and  info not showing up on edit form
         function editShowsForm(date, time, city, venue, info, tickets, id) {
             $('.date').datepicker("option", {
                 minDate: null,
@@ -56,7 +57,7 @@
 	$(document).ready(function() {		
 		$('.date').datepicker({
 			minDate:0,
-                        dateFormat: "m/d/yy",
+                        dateformat: "m/d/yy",
 			defaultDate:0
 		});
 		$('.time').timepicker({
@@ -118,7 +119,7 @@
 			resizable: false,
 			modal: true,
 			buttons: {
-				"Submit": function() {
+				"Add": function() {
 					$('#showsForm').submit();
 				},
 				"Cancel": function() {
@@ -127,7 +128,6 @@
 			}
 		});
 		
-                // TODO: fix table refresh delay on add/edit submit.
 		$('#showsForm').submit(function(e) {
                     $.ajaxSetup({async: false});
                     $.post('ajax.php', $('#showsForm').serialize(), function(data) {
@@ -148,7 +148,7 @@
 		<br /><br />
 		<div id="header">Shows</div>
 		<br /><br />
-		<div id="showsTable"></div>
+		<div id="showsTable""></div>
 	</div>
 </body>
 
