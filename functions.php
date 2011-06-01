@@ -133,7 +133,6 @@ class Gig
 	public $venue;
 	public $info;
 	public $tickets;
-	public $sold_out;
 	function __construct($date, $city, $venue, $info, $tickets)
 	{
 		$this->date = $date;

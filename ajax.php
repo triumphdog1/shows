@@ -32,7 +32,7 @@ if ($action == 'checkLogin') {
 if ($action == 'edit' && $logged_in) {
 	//arraymap('htmlentities', $_POST);
 	$id = $_POST['id'];
-	$date = strtotime($_POST['date'] . " " . $_POST['hour'] . ":" . $_POST['minute'] . " " . $_POST['ampm']);
+	$date = strtotime($_POST['date'] . " " . $_POST['time']);
 	$city = htmlentities($_POST['city'], ENT_QUOTES);
 	$venue = htmlentities($_POST['venue'], ENT_QUOTES);
 	$info = htmlentities($_POST['info'], ENT_QUOTES);
@@ -40,8 +40,7 @@ if ($action == 'edit' && $logged_in) {
 	if($tickets == "http://") $tickets = "";
 	$gig = new Gig($date, $city, $venue, $info, $tickets);
 	$gig->setId($id);
-	echo (editGig($gig)) ?
-		"$date added!" : false;
+	editGig($gig);
 }
 
 if ($action == 'add' && $logged_in) {;

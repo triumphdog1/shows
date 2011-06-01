@@ -34,6 +34,7 @@ require_once('functions.php');
 	function hideShowsForm() {
 		$('#showsFormDialog').dialog("close");
                 $('#showsFormDialog').dialog("option", "title", "Add Show");
+                $('#info').html("");
 		$('#reset').click();
 
 	}
@@ -45,6 +46,7 @@ require_once('functions.php');
             });
             
             $('#showsFormDialog').dialog("option", "title", "Edit Show");
+            $('#id').val(id);
             $('#city').val(city);
             $('#venue').val(venue);
             $('#info').html(info);
@@ -136,7 +138,7 @@ require_once('functions.php');
 		
 		$('#showsForm').submit(function(e) {
                     $.post('ajax.php', $('#showsForm').serialize(), function(data) {
-			if (data == 0) alert("Failed to add show!");
+			if (data) alert(data);
 			hideShowsForm();
                         reloadTable();
                     });
@@ -202,6 +204,7 @@ require_once('functions.php');
 				<input type="submit" style="display:none">
                                 <input type="reset" style="display:none" id="reset">
 				<input type="hidden" name="action" id="action" value="add">
+                                <input type="hidden" name="id" id="id" value="">
 			</fieldset>
 		</form>
 	</div>
