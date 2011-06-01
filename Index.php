@@ -10,6 +10,7 @@ require_once('functions.php');
 <link title="ui-theme" rel="stylesheet" type="text/css" href="js/jquery-ui-1.8.13.custom.css" />
 <script type="text/javascript" src="js/jquery-1.6.1.min.js"></script>
 <script type="text/javascript" src="js/jquery-ui-1.8.13.custom.min.js"></script>
+<script type="text/javascript" src="js/jquery.validate.js"></script>
 <script type="text/javascript">
 	
 	function reloadTable() {
@@ -36,6 +37,7 @@ require_once('functions.php');
                 $('#showsFormDialog').dialog("option", "title", "Add Show");
                 $('#info').html("");
 		$('#reset').click();
+                $('#tickets').val("http://")
 
 	}
         
@@ -47,10 +49,10 @@ require_once('functions.php');
             
             $('#showsFormDialog').dialog("option", "title", "Edit Show");
             $('#id').val(id);
-            $('#city').val(city);
-            $('#venue').val(venue);
-            $('#info').html(info);
-            $('#tickets').val(tickets);
+            $('#city').val($("<div/>").html(city).text());
+            $('#venue').val($("<div/>").html(venue).text());
+            $('#info').html($("<div/>").html(info).text());
+            $('#tickets').val($("div/>").html(tickets).text());
             $('#action').val('edit');
             $('#showsFormDialog').dialog("open");
             $('#time').timepicker('setTime', time);
@@ -75,8 +77,8 @@ require_once('functions.php');
 		reloadTable();
 		checkLogin();
 		
-		$('#login-form').submit(function(e) {	
-			$.post("ajax.php", $('#login-form').serialize(), function(data) {
+		$('#loginForm').submit(function(e) {	
+			$.post("ajax.php", $('#loginForm').serialize(), function(data) {
 				if (data) {
 					reloadTable();
 					checkLogin();
@@ -98,7 +100,7 @@ require_once('functions.php');
 			modal: true,
 			buttons: {
 				"Login": function() {
-					$('#login-form').submit();
+					$('#loginForm').submit();
 				},
 				"Cancel": function() {
 					hideLogin();
@@ -144,6 +146,15 @@ require_once('functions.php');
                     });
                     e.preventDefault();
 		});
+                /*
+                $('#loginForm').validate({
+                    highlight: function(element, errorClass) {
+                        $(element).fadeOut(function() {
+                            $(element).fadeIn();
+                        });
+                    }
+                });
+                */
 	});
 </script>
 </head>
@@ -159,16 +170,16 @@ require_once('functions.php');
 	</div>
 </body>
 
-<div style="display:none">
+<div style="display:none;">
 	<div id="login" title="Login">
-		<form method="post" id="login-form">
+		<form method="post" id="loginForm">
 			<fieldset>
 				<label for="username">Username:</label>
-				<input name="username" id="username">
+				<input name="username" id="username" class="required" />
 				<label for="password">Password:</label>
-				<input type="password" name="password" id="password">
-				<input type="submit" style="display:none">
-				<input type="hidden" name="action" value="login">
+				<input type="password" name="password" id="password" class="required" />
+				<input type="submit" style="display:none;" />
+				<input type="hidden" name="action" value="login" />
 			</fieldset>
 		</form>
 	</div>
@@ -184,27 +195,27 @@ require_once('functions.php');
 						<td style="padding-left:20px">Time:</td>
 					</tr>
 					<tr>
-						<td><input type='text' name='date' id='date' class='date'></td>
-						<td style="padding-left:20px"><input type='text' name='time' id='time' class='time'></td>
+						<td><input type='text' name='date' id='date' class='date' /></td>
+						<td style="padding-left:20px"><input type='text' name='time' id='time' class='time' /></td>
 					</tr>
 				</table>
 				<br />
 				<label for="city">City:</label><br />
-				<input name="city" id="city" size="42"><br />
+				<input name="city" id="city" size="42" /><br />
 				<br />
 				<label for="venue">Venue:</label><br />
-				<input name="venue" id="venue" size="42"><br />
+				<input name="venue" id="venue" size="42" /><br />
 				<br />
 				<label for="info">More Information:</label><br />
 				<textarea name="info" id="info" rows="4" cols="41"></textarea><br />
 				<br />
 				<label for="tickets">Ticket link or price</label><br />
-				<input name="tickets" id="tickets" size="42"><br />
+				<input name="tickets" id="tickets" size="42" value="http://" /><br />
 				<br />
-				<input type="submit" style="display:none">
-                                <input type="reset" style="display:none" id="reset">
-				<input type="hidden" name="action" id="action" value="add">
-                                <input type="hidden" name="id" id="id" value="">
+				<input type="submit" style="display:none" />
+                                <input type="reset" style="display:none" id="reset" />
+				<input type="hidden" name="action" id="action" value="add" />
+                                <input type="hidden" name="id" id="id" value="" />
 			</fieldset>
 		</form>
 	</div>

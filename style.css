@@ -31,3 +31,7 @@ body {
 	cursor: pointer;
 }
 
+label {
+    float: left;
+}
+
