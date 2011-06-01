@@ -1,11 +1,9 @@
 <!DOCTYPE HTML>
-<?
-require_once('functions.php');
-?>
 <html>
 
-//
+
 <head>
+<title>Shows</title>
 <link rel="stylesheet" type="text/css" href="style.css"/>
 <link title="ui-theme" rel="stylesheet" type="text/css" href="js/jquery-ui-1.8.13.custom.css" />
 <script type="text/javascript" src="js/jquery-1.6.1.min.js"></script>
@@ -38,6 +36,7 @@ require_once('functions.php');
 
 	}
         
+        // TODO: date, time and  info not showing up on edit form
         function editShowsForm(date, time, city, venue, info, tickets, id) {
             $('.date').datepicker("option", {
                 minDate: null,
@@ -57,7 +56,7 @@ require_once('functions.php');
 	$(document).ready(function() {		
 		$('.date').datepicker({
 			minDate:0,
-                        dateformat: "m/d/yy",
+                        dateFormat: "m/d/yy",
 			defaultDate:0
 		});
 		$('.time').timepicker({
@@ -119,7 +118,7 @@ require_once('functions.php');
 			resizable: false,
 			modal: true,
 			buttons: {
-				"Add": function() {
+				"Submit": function() {
 					$('#showsForm').submit();
 				},
 				"Cancel": function() {
@@ -128,6 +127,7 @@ require_once('functions.php');
 			}
 		});
 		
+                // TODO: fix table refresh delay on add/edit submit.
 		$('#showsForm').submit(function(e) {
                     $.ajaxSetup({async: false});
                     $.post('ajax.php', $('#showsForm').serialize(), function(data) {
@@ -148,7 +148,7 @@ require_once('functions.php');
 		<br /><br />
 		<div id="header">Shows</div>
 		<br /><br />
-		<div id="showsTable""></div>
+		<div id="showsTable"></div>
 	</div>
 </body>
 
