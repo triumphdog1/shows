@@ -3,15 +3,16 @@ body {
 	color: white;
 	font-family: 'Futura-Medium', 'Futura', 'Trebuchet MS', sans-serif;
 }
+
 #main {
 	background-color: #666666;
 	width: 800px;
-	margin-left: auto ;
-	margin-right: auto ;
-	padding-top: 10px;
-	padding-bottom: 10px;
-	padding-left: 10px;
-	padding-right: 10px;
+        margin-left: auto;
+        margin-right: auto;
+	padding-top: 50px;
+	padding-bottom: 50px;
+	padding-left: 50px;
+	padding-right: 50px;
 }
 
 #header {
@@ -20,10 +21,16 @@ body {
 }
 
 #showsTable {
-	padding: 10px;
+        border: 2px solid red;
+        margin-left: auto;
+        margin-right: auto;
+	padding: 0px;
         width: 700px;
         position: relative;
-        left: 25px;
+}
+
+#showsTable td {
+    padding-left: 20px;
 }
 
 #login-link {

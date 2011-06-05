@@ -119,13 +119,33 @@ $(document).ready(function() {
                 date: {
                     maxlength: '10',
                     required: true,
-                    date:true
+                    date: true
                 },
+                
                 time: {
                     maxlength: '8',
                     required: true
+                },
+                
+                city: {
+                    maxlength: '50',
+                    required: true
+                },
+                
+                venue: {
+                    maxlength: '100',
+                    required: true
+                },
+                
+                info: {
+                    maxlength: '250',
+                    required: false
+                },
+                
+                tickets: {
+                    maxlength: '250',
+                    required: false
                 }
-
             }
         });
 
@@ -193,17 +213,14 @@ $(document).ready(function() {
         });
 
         $('#showsForm').submit( function(e) {
-            e.preventDefault();/*
-            var res = $('showsForm').valid();
-            if (res) {*/
+            e.preventDefault();
+            if (showsFormValidator.form()) {
                 $.post('control.php', $('#showsForm').serialize(), function(data) {
                     if (data) alert(data);
                     hideShowsForm();
                     reloadTable();
-                });/*
-            } else {
-                alert("Not valid!");
-            }*/
+                });
+            }
         });
 });
 </script>
@@ -243,25 +260,25 @@ $(document).ready(function() {
 				<table>
 					<tr>
 						<td>Date:</td>
-						<td style="padding-left:20px">Time:</td>
+						<td>Time:</td>
 					</tr>
 					<tr>
 						<td><input type='text' name='date' id='date' /></td>
-						<td style="padding-left:20px"><input type='text' name='time' id='time' /></td>
+						<td><input type='text' name='time' id='time' /></td>
 					</tr>
 				</table>
 				<br />
 				<label for="city">City:</label><br />
-				<input name="city" id="city" size="42" /><br />
+				<input name="city" id="city" size="42" maxlength="50" /><br />
 				<br />
 				<label for="venue">Venue:</label><br />
-				<input name="venue" id="venue" size="42" /><br />
+				<input name="venue" id="venue" size="42" maxlength="100" /><br />
 				<br />
 				<label for="info">More Information:</label><br />
 				<textarea name="info" id="info" rows="4" cols="41"></textarea><br />
 				<br />
 				<label for="tickets">Ticket link or price</label><br />
-				<input name="tickets" id="tickets" size="42" value="http://" /><br />
+				<input name="tickets" id="tickets" size="42" value="http://" maxlength="250" /><br />
 				<br />
 				<input type="submit" style="display:none" />
                                 <input type="reset" style="display:none" id="reset" />
