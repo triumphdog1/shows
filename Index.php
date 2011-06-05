@@ -54,7 +54,7 @@ $(document).ready(function() {
 
         function hideLogin() {
                 $('#login').dialog("close");
-                $('#loginReset').click();
+                loginValidator.resetForm();
 
         }
 
@@ -87,6 +87,12 @@ $(document).ready(function() {
             $('#date').datepicker('hide');
             $('#city').focus();
         }
+        
+        $('form').live( 'keyup', function(e) {
+            if(e.keyCode == 13) {       
+                $(this).submit();
+            }
+        });
 
 
         $('#date').datepicker({
@@ -245,8 +251,6 @@ $(document).ready(function() {
 				<input name="username" id="username" class="required" />
 				<label for="password">Password:</label>
 				<input type="password" name="password" id="password" class="required" />
-				<input type="submit" style="display:none;" />
-                                <input type="reset" style="display:none;" id="loginReset" />
 				<input type="hidden" name="action" value="login" />
 			</fieldset>
 		</form>
@@ -280,8 +284,6 @@ $(document).ready(function() {
 				<label for="tickets">Ticket link or price</label><br />
 				<input name="tickets" id="tickets" size="42" value="http://" maxlength="250" /><br />
 				<br />
-				<input type="submit" style="display:none" />
-                                <input type="reset" style="display:none" id="reset" />
 				<input type="hidden" name="action" id="action" value="add" />
                                 <input type="hidden" name="id" id="id" value="" />
 			</fieldset>
