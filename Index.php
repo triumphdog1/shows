@@ -1,6 +1,6 @@
 <!DOCTYPE HTML>
 <?
-require_once('functions.php');
+require_once('model.php');
 ?>
 <html>
 
@@ -12,47 +12,74 @@ require_once('functions.php');
 <script type="text/javascript" src="js/jquery-ui-1.8.13.custom.min.js"></script>
 <script type="text/javascript" src="js/jquery.validate.js"></script>
 <script type="text/javascript">
-	
-	function reloadTable() {
-                
-		$.post('ajax.php', { 'action': 'showsTable' }, function(data) {
-			$('#showsTable').html(data);
-		});
-		$('#showsFrame', top.document).height('1000px');
-		
-	}
-	
-	function checkLogin() {
-		$.post('ajax.php', { 'action': 'checkLogin' }, function(data) {
-			data ? $('#login-button').attr('src', 'images/logout_button.gif') : $('#login-button').attr('src', 'images/login_button.gif');
-		});
-	}
-	
-	function hideLogin() {
-		$('#login').dialog("close");
-	}
-	
-	function hideShowsForm() {
-		$('#showsFormDialog').dialog("close");
+
+$(document).ready(function() {
+    
+        $('.delete_button').live( 'click', function() {
+            var answer = confirm('Really delete this gig?');
+            if (answer) {
+                    $.post('ajax.php', { 'action': 'delete', 'id': $(this).attr('rel') }, function() {
+                            reloadTable();
+                    });
+            }
+        });
+
+        $('.edit_button').live( 'click', function() {
+            var id = $(this).attr('rel');
+            var date = $('#date'+id).html();
+            var time = $('#time'+id).html();
+            var city = $('#city'+id).html();
+            var venue = $('#venue'+id).html();
+            var info = $('#info'+id).html();
+            var tickets = $('#tickets'+id).attr('rel');
+            editShowsForm(date,time,city,venue,info,tickets,id);
+        });
+
+        $('#addButton').live( 'click', function() {
+            $('#showsFormDialog').dialog('open');
+        });
+        
+        function reloadTable() {               
+            $.post('control.php', { 'action': 'showsTable' }, function(data) {
+                    $('#showsTable').html(data);
+            });
+            $('#showsFrame', top.document).height('1000px');
+        }
+
+        function checkLogin() {
+                $.post('control.php', { 'action': 'checkLogin' }, function(data) {
+                        data ? $('#login-button').attr('src', 'images/logout_button.gif') : $('#login-button').attr('src', 'images/login_button.gif');
+                });
+        }
+
+        function hideLogin() {
+                $('#login').dialog("close");
+                $('#loginReset').click();
+
+        }
+
+        function hideShowsForm() {
+                $('#showsFormDialog').dialog("close");
                 $('#showsFormDialog').dialog("option", "title", "Add Show");
                 $('#info').html("");
-		$('#reset').click();
+                $('#reset').click();
+                showsFormValidator.resetForm();
                 $('#tickets').val("http://")
 
-	}
-        
+        }
+
         function editShowsForm(date, time, city, venue, info, tickets, id) {
             $('.date').datepicker("option", {
                 minDate: null,
                 defaultDate: date
             });
-            
+
             $('#showsFormDialog').dialog("option", "title", "Edit Show");
             $('#id').val(id);
             $('#city').val($("<div/>").html(city).text());
             $('#venue').val($("<div/>").html(venue).text());
             $('#info').html($("<div/>").html(info).text());
-            $('#tickets').val($("div/>").html(tickets).text());
+            $('#tickets').val($("<div/>").html(tickets).text());
             $('#action').val('edit');
             $('#showsFormDialog').dialog("open");
             $('#time').timepicker('setTime', time);
@@ -60,102 +87,125 @@ require_once('functions.php');
             $('#date').datepicker('hide');
             $('#city').focus();
         }
-	
-	$(document).ready(function() {		
-		$('.date').datepicker({
-			minDate:0,
-                        dateFormat: "m/d/yy",
-			defaultDate:0,
-                        constrainInput:true
-		});
-		$('.time').timepicker({
-			showPeriod: true,
-			showLeadingZero: false,
-                        amPmText: ['am', 'pm'],
-			defaultTime:"4:20 pm"
-		});
-		reloadTable();
-		checkLogin();
-		
-		$('#loginForm').submit(function(e) {	
-			$.post("ajax.php", $('#loginForm').serialize(), function(data) {
-				if (data) {
-					reloadTable();
-					checkLogin();
-				} else{
-					alert("Login failed!");
-					$('#login').dialog("open");
-				}
-			});
-			hideLogin();
-			e.preventDefault()
-		});
-		
-		$('#login').dialog({
-			autoOpen: false,
-			height: 280,
-			width: 280,
-			draggable: false,
-			resizable: false,
-			modal: true,
-			buttons: {
-				"Login": function() {
-					$('#loginForm').submit();
-				},
-				"Cancel": function() {
-					hideLogin();
-				}
-			}
-		});
-		
-		$('#login-button').click(function() {
-			if ($('#login-button').attr('src') == 'images/login_button.gif') {
-				$('#login').dialog("open");
-			} else if ($('#login-button').attr('src') == 'images/logout_button.gif') {
-				$.post("ajax.php", {"action":"logout"}, function() {
-					reloadTable();
-					checkLogin();
-				});
-			}
-		});
-		
-		$('#showsFormDialog').dialog({
-			autoOpen: false,
-			height: 600,
-			width: 500,
-			draggable: false,
-			resizable: false,
-			modal: true,
-                        showButtonPanel: true,
-                        closeText:"X",
-			buttons: {
-				"Submit": function() {
-					$('#showsForm').submit();
-				},
-				"Cancel": function() {
-					hideShowsForm();
-				}
-			}
-		});
-		
-		$('#showsForm').submit(function(e) {
-                    $.post('ajax.php', $('#showsForm').serialize(), function(data) {
-			if (data) alert(data);
-			hideShowsForm();
-                        reloadTable();
-                    });
-                    e.preventDefault();
-		});
-                /*
-                $('#loginForm').validate({
-                    highlight: function(element, errorClass) {
-                        $(element).fadeOut(function() {
-                            $(element).fadeIn();
-                        });
-                    }
+
+
+        $('#date').datepicker({
+                minDate:0,
+                dateFormat: "m/d/yy",
+                defaultDate:0,
+                constrainInput:true
+        });
+        $('#time').timepicker({
+                showPeriod: true,
+                showLeadingZero: false,
+                amPmText: ['am', 'pm'],
+                defaultTime:"4:20 pm"
+        });
+        reloadTable();
+        checkLogin();
+
+        var loginValidator = $('#loginForm').validate({
+            onsubmit: false,
+            rules: {
+                username: "required",
+                password: "required"
+            }
+
+        });
+
+        var showsFormValidator = $('#showsForm').validate({
+            onsubmit: false,
+            rules: {
+                date: {
+                    maxlength: '10',
+                    required: true,
+                    date:true
+                },
+                time: {
+                    maxlength: '8',
+                    required: true
+                }
+
+            }
+        });
+
+        $('#loginForm').submit(function(e) {
+            e.preventDefault();
+            if ($('#loginForm').valid()) {
+                $.post("control.php", $('#loginForm').serialize(), function(data) {
+                        if (data) {
+                                reloadTable();
+                                checkLogin();
+                        } else{
+                                alert("Invalid username or password.");
+                                $('#login').dialog("open");
+                        }
                 });
-                */
-	});
+                hideLogin();
+            }
+        });
+
+        $('#login').dialog({
+                autoOpen: false,
+                height: 300,
+                width: 280,
+                draggable: false,
+                resizable: false,
+                modal: true,
+                buttons: {
+                        "Login": function() {
+                                $('#loginForm').submit();
+                        },
+                        "Cancel": function() {
+                                hideLogin();
+                        }
+                }
+        });
+
+        $('#login-button').click(function() {
+                if ($('#login-button').attr('src') == 'images/login_button.gif') {
+                        $('#login').dialog("open");
+                } else if ($('#login-button').attr('src') == 'images/logout_button.gif') {
+                        $.post("control.php", {"action":"logout"}, function() {
+                                reloadTable();
+                                checkLogin();
+                        });
+                }
+        });
+
+        $('#showsFormDialog').dialog({
+                autoOpen: false,
+                height: 600,
+                width: 500,
+                draggable: false,
+                resizable: false,
+                modal: true,
+                showButtonPanel: true,
+                closeText:"X",
+                buttons: {
+                        "Submit": function() {
+                                $('#showsForm').submit();
+                        },
+                        "Cancel": function() {
+                                hideShowsForm();
+                        }
+                }
+        });
+
+        $('#showsForm').submit( function(e) {
+            e.preventDefault();/*
+            var res = $('showsForm').valid();
+            if (res) {*/
+                $.post('control.php', $('#showsForm').serialize(), function(data) {
+                    if (data) alert(data);
+                    hideShowsForm();
+                    reloadTable();
+                });/*
+            } else {
+                alert("Not valid!");
+            }*/
+        });
+});
 </script>
 </head>
 
@@ -179,6 +229,7 @@ require_once('functions.php');
 				<label for="password">Password:</label>
 				<input type="password" name="password" id="password" class="required" />
 				<input type="submit" style="display:none;" />
+                                <input type="reset" style="display:none;" id="loginReset" />
 				<input type="hidden" name="action" value="login" />
 			</fieldset>
 		</form>
@@ -195,8 +246,8 @@ require_once('functions.php');
 						<td style="padding-left:20px">Time:</td>
 					</tr>
 					<tr>
-						<td><input type='text' name='date' id='date' class='date' /></td>
-						<td style="padding-left:20px"><input type='text' name='time' id='time' class='time' /></td>
+						<td><input type='text' name='date' id='date' /></td>
+						<td style="padding-left:20px"><input type='text' name='time' id='time' /></td>
 					</tr>
 				</table>
 				<br />
