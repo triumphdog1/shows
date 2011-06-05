@@ -21,7 +21,7 @@ body {
 }
 
 #showsTable {
-        border: 2px solid red;
+        border: 0px solid red;
         margin-left: auto;
         margin-right: auto;
 	padding: 0px;
