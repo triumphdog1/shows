@@ -75,16 +75,18 @@ if ($action == 'delete' && $logged_in) {
 if ($action == 'showsTable') {
     global $logged_in;
     $gigs = $logged_in ? listAll() : listUpcoming();
-    foreach($gigs as $gig) {    
-        $a['id'] = $gig->id;
-        $a['date'] = date('n/d/Y', strtotime($gig->date));
-        $a['time'] = date('g:i a', strtotime($gig->date));
-        $a['city'] = html_entity_decode($gig->city);
-        $a['venue'] = html_entity_decode($gig->venue);
-        $a['info'] = html_entity_decode($gig->info);
-        $a['tickets'] = ticketDisplay(html_entity_decode($gig->tickets));
-        $aReturn['rows'][] = $a;
-    }
+    if (count($gigs) > 0) {
+        foreach($gigs as $gig) {    
+            $a['id'] = $gig->id;
+            $a['date'] = date('n/d/Y', strtotime($gig->date));
+            $a['time'] = date('g:i a', strtotime($gig->date));
+            $a['city'] = html_entity_decode($gig->city);
+            $a['venue'] = html_entity_decode($gig->venue);
+            $a['info'] = html_entity_decode($gig->info);
+            $a['tickets'] = ticketDisplay(html_entity_decode($gig->tickets));
+            $aReturn['rows'][] = $a;
+        }
+    } else $aReturn['rows'] = false;
     $aReturn['logged_in'] = $logged_in;
     $aReturn['success'] = true;
     if (!$error) echo json_encode($aReturn);

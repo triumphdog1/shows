@@ -15,7 +15,6 @@ require_once('model.php');
 
 $(document).ready(function() {
         reloadTable();
-        checkLogin();
         $('.delete_button').live( 'click', function() {
             var answer = confirm('Really delete this gig?');
             if (answer) {
@@ -90,21 +89,25 @@ $(document).ready(function() {
         
         function reloadTable() {
             $.post('control.php', { 'action': 'showsTable' }, function(data) {
+                    data.logged_in ? $('#login-button').attr('src', 'images/logout_button.gif') : $('#login-button').attr('src', 'images/login_button.gif');
                     if (data.success){
-                        var s = "<table id='showsTable'>";
-                        $.each(data.rows, function(d,row){
-                            s += "<tr valign='top'><td><span id='date" + row['id'] + "'>" + row['date'] + "</span><br />"
-                                + "<span id='time" + row['id'] + "'>" + row['time'] + "</span><br /><br /><br /></td>"
-                                + "<td><span id='city" + row['id'] + "'>" + row['city'] + "</span><br /><span id='venue" + row['id'] + "'>" + row['venue'] + "</span></td>"
-                                + "<td width='150'><span id='info" + row['id'] + "'>" + row['info'] + "</span></td><td style='padding-right:10px;'>"
-                                + "<span id='tickets" + row['id'] + "' rel='" + row['tickets'] + "'>"+ row['tickets'] + "</span></td>";
-                            if (data.logged_in) {
-                                s += "<td><img src='images/edit_button.gif' class='edit_button' rel='" + row['id'] + "'></td>"
-                                    + "<td><img src='images/delete_button.gif' class='delete_button' rel='" + row['id'] + "'></td>";
-                            }
-                            s += "</tr>";
-                        });
-                        s += "</table>";
+                        var s = "";
+                        if (data.rows) {
+                            s += "<table id='showsTable'>";
+                            $.each(data.rows, function(d,row){
+                                s += "<tr valign='top'><td><span id='date" + row['id'] + "'>" + row['date'] + "</span><br />"
+                                    + "<span id='time" + row['id'] + "'>" + row['time'] + "</span><br /><br /><br /></td>"
+                                    + "<td><span id='city" + row['id'] + "'>" + row['city'] + "</span><br /><span id='venue" + row['id'] + "'>" + row['venue'] + "</span></td>"
+                                    + "<td width='150'><span id='info" + row['id'] + "'>" + row['info'] + "</span></td><td style='padding-right:10px;'>"
+                                    + "<span id='tickets" + row['id'] + "' rel='" + row['tickets'] + "'>"+ row['tickets'] + "</span></td>";
+                                if (data.logged_in) {
+                                    s += "<td><img src='images/edit_button.gif' class='edit_button' rel='" + row['id'] + "'></td>"
+                                        + "<td><img src='images/delete_button.gif' class='delete_button' rel='" + row['id'] + "'></td>";
+                                }
+                                s += "</tr>";
+                            });
+                            s += "</table>";
+                        }
                         if (data.logged_in) {
                             s += "<div align=center><input type='button' id='addButton' value='Add Show'></div>";
                         }
@@ -113,12 +116,6 @@ $(document).ready(function() {
                         $('#shows.Table').html(data.error);
                     }
             }, 'json');
-        }
-
-        function checkLogin() {
-                $.post('control.php', { 'action': 'checkLogin' }, function(data) {
-                        data ? $('#login-button').attr('src', 'images/logout_button.gif') : $('#login-button').attr('src', 'images/login_button.gif');
-                });
         }
 
         function hideLogin() {
@@ -183,7 +180,6 @@ $(document).ready(function() {
                 $.post("control.php", $('#loginForm').serialize(), function(data) {
                         if (data) {
                                 reloadTable();
-                                checkLogin();
                         } else{
                                 alert("Invalid username or password.");
                                 $('#login').dialog("open");

@@ -42,7 +42,7 @@ label {
     float: left;
 }
 
-.edit_button, .delete_button {
+.edit_button, .delete_button, #addButton {
     cursor: pointer;
 }
 
