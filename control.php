@@ -52,11 +52,17 @@ if ($action == 'edit' && $logged_in) {
 	if($tickets == "http://") $tickets = "";
 	$gig = new Gig($date, $city, $venue, $info, $tickets);
 	$gig->setId($id);
-        $a['success'] = true;
-	if (editGig($gig)) echo json_encode($a);
+	editGig($gig);
+        if ($_SESSION['error']) {
+            $a['success'] = false;
+            $a['error'] = $_SESSION['msg'];
+        } else {
+            $a['success'] = true;
+        }
+        echo json_encode($a);
 }
 
-if ($action == 'add' && $logged_in) {;
+if ($action == 'add' && $logged_in) {
 	$date = strtotime($_POST['date'] . " " . $_POST['time']);
 	$city = htmlentities($_POST['city'], ENT_QUOTES);
 	$venue = htmlentities($_POST['venue'], ENT_QUOTES);
@@ -64,33 +70,51 @@ if ($action == 'add' && $logged_in) {;
 	$tickets = htmlentities($_POST['tickets'], ENT_QUOTES);
 	if($tickets == "http://") $tickets = "";
 	$gig = new Gig($date, $city, $venue, $info, $tickets);
-        $a['success'] = true;
-	if (addGig($gig)) echo json_encode($a);
+	addGig($gig);
+        if ($_SESSION['error']) {
+            $a['success'] = false;
+            $a['error'] = $_SESSION['msg'];
+        } else {
+            $a['success'] = true;
+        }
+        json_encode($a);
 }
 
 if ($action == 'delete' && $logged_in) {
-        $e['success'] = true;
-	if (removeGig($_POST['id'])) echo json_encode($e);
+	removeGig($_POST['id']);
+        if ($_SESSION['error']) {
+            $a['success'] = false;
+            $a['error'] = $_SESSION['msg'];
+        } else {
+            $a['success'] = true;
+        }
+        echo json_encode($a);
 }
 
 if ($action == 'showsTable') {
     global $logged_in;
+    global $err;
     $gigs = $logged_in ? listAll() : listUpcoming();
-    if (count($gigs) > 0) {
-        foreach($gigs as $gig) {    
-            $a['id'] = $gig->id;
-            $a['date'] = date('n/d/Y', strtotime($gig->date));
-            $a['time'] = date('g:i a', strtotime($gig->date));
-            $a['city'] = html_entity_decode($gig->city);
-            $a['venue'] = html_entity_decode($gig->venue);
-            $a['info'] = html_entity_decode($gig->info);
-            $a['tickets'] = ticketDisplay(html_entity_decode($gig->tickets));
-            $aReturn['rows'][] = $a;
-        }
-    } else $aReturn['rows'] = false;
-    $aReturn['logged_in'] = $logged_in;
-    $aReturn['success'] = true;
-    if (!$error) echo json_encode($aReturn);
+    if ($_SESSION['error']) {
+        $aReturn['success'] = false;
+        $aReturn['error'] = $_SESSION['msg'];
+    } else {
+        if (count($gigs) > 0) {
+            foreach($gigs as $gig) {    
+                $a['id'] = $gig->id;
+                $a['date'] = date('n/j/Y', strtotime($gig->date));
+                $a['time'] = date('g:i a', strtotime($gig->date));
+                $a['city'] = html_entity_decode($gig->city);
+                $a['venue'] = html_entity_decode($gig->venue);
+                $a['info'] = html_entity_decode($gig->info);
+                $a['tickets'] = ticketDisplay(html_entity_decode($gig->tickets));
+                $aReturn['rows'][] = $a;
+            }
+        } else $aReturn['rows'] = false;
+        $aReturn['logged_in'] = $logged_in;
+        $aReturn['success'] = true;
+    }
+    echo json_encode($aReturn);
 }
 
 ?>

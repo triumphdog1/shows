@@ -2,8 +2,6 @@
 require_once('auth.php');
 session_start();
 error_reporting('E_ALL ^ E_NOTICE');
-$err = false;
-$errMsg = "";
 
 // TODO: Optimize model code.  Make use of dbQuery function
 function dbQuery($sql) {
@@ -14,26 +12,20 @@ function dbQuery($sql) {
         global $errMsg;
 	$con = mysql_connect("localhost", $dbuser, $dbpass);
 	if (!$con) {
-		$e['success'] = false;
-                $e['error'] = "Failed to Establish Connection!<br />". mysql_errno($con) . " : " . mysql_error($con) . "'";
-                $err = true;
-                $errMsg = $e['error'];
+                $_SESSION['error'] = true;
+                $_SESSION['msg'] = "Failed to Establish Connection!\n". mysql_errno($con) . " : " . mysql_error($con) . "'";
                 echo json_encode($e);
                 return false;
 	}
 	if ( !mysql_select_db($db) ) {
-                $e['success'] = false;
-                $e['error'] = "Failed to select database!<br />" . mysql_errno($con) . " : " . mysql_error($con) . "'";
-                $err = true;
-                $errMsg = $e['error'];
+                $_SESSION['error'] = true;
+                $_SESSION['msg'] = "Failed to select database!\n" . mysql_errno($con) . " : " . mysql_error($con) . "'";
                 echo json_encode($e);
                 return false;
 	}
         if ( !mysql_query($sql) ) {
-                $e['success'] = false;
-                $e['error'] = "Failed to execute sql!<br />" . mysql_errno($con) . " : " . mysql_error($con) . "'";
-                $err = true;
-                $errMsg = $e['error'];
+                $_SESSION['error'] = true;
+                $_SESSION['msg'] = "Failed to execute sql!\n" . mysql_errno($con) . " : " . mysql_error($con) . "'";
                 echo json_encode($e);
                 return false;
 	}
@@ -47,23 +39,18 @@ function dbConnect() {
 	global $db;
 	$con = mysql_connect("localhost", $dbuser, $dbpass);
 	if (!$con) {
-                $e['success'] = false;
-                $e['error'] = "Failed to Establish Connection!<br />";// . mysql_errno($con) . " : " . mysql_error($con);
-                $err = true;
-                $errMsg = $e['error'];
+                $_SESSION['error'] = true;
+                $_SESSION['msg'] = "Failed to Establish Connection!\n";// . mysql_errno($con) . " : " . mysql_error($con);
                 echo json_encode($e);
                 return false;
 	}
 	
 	if ( !mysql_select_db($db) ) {
-                $e['success'] = false;
-                $e['error'] = "Failed to select database!<br />" . mysql_errno($con) . " : " . mysql_error($con);
-                $err = true;
-                $errMsg = $e['error'];
-                echo json_encode($e);
+                $_SESSION['error'] = true;
+                $_SESSION['msg'] = "Failed to select database!\n" . mysql_errno($con) . " : " . mysql_error($con);
                 return false;
 	}
-	return true;
+	return $con;
 }
 
 function table_exists() { 
@@ -106,7 +93,8 @@ function removeGig($id) {
 }
 
 function listAll() {
-	if(dbConnect()){
+        $con = dbConnect();
+	if($con){
             $a = array();
             $res = mysql_query("SELECT * FROM gigs ORDER BY date ASC");
             if ($res) {
@@ -117,9 +105,9 @@ function listAll() {
                 }
             } else {
                 $a['success'] = false;
-                $a['error'] = "Failed to locate database tables!";
-                $err = true;
-                $errMsg = $e['error'];
+                $a['error'] = "Failed to locate database tables!\n";
+                $_SESSION['error'] = true;
+                $_SESSION['msg'] = $e['error'];
                 echo json_encode($a);
             }
             mysql_close();
@@ -128,7 +116,8 @@ function listAll() {
 }
 
 function listUpcoming() {
-	if(dbConnect()) {
+        $con = dbConnect();
+	if($con) {
             $a = array();
             $res = mysql_query("SELECT * FROM gigs WHERE date >= CURDATE() ORDER BY date ASC");
             if ($res) {
@@ -140,8 +129,8 @@ function listUpcoming() {
             } else {
                 $a['success'] = false;
                 $a['error'] = "Failed to locate database tables!";
-                $err = true;
-                $errMsg = $e['error'];
+                $_SESSION['error'] = true;
+                $_SESSION['msg'] = $e['error'];
                 echo json_encode($a);
             }
             mysql_close();
@@ -151,7 +140,8 @@ function listUpcoming() {
 
 
 function nextShow() {
-	if(dbConnect()) {
+        $con = dbConnect();
+	if($con) {
             $sql = "SELECT * FROM gigs WHERE date >= '" . date() . "' ORDER BY date DESC";
             $res = mysql_query($sql);
             if ($row = mysql_fetch_array($res)) {

@@ -112,6 +112,7 @@ $(document).ready(function() {
                         }
                         $('#showsTable').html(s);
                     }else{
+                        alert(data.error);
                         $('#shows.Table').html(data.error);
                     }
             }, 'json');
