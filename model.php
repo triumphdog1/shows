@@ -3,33 +3,6 @@ require_once('auth.php');
 session_start();
 error_reporting('E_ALL ^ E_NOTICE');
 
-// TODO: Optimize model code.  Make use of dbQuery function
-function dbQuery($sql) {
-	global $dbuser;
-	global $dbpass;
-	global $db;
-        global $err;
-        global $errMsg;
-	$con = mysql_connect("localhost", $dbuser, $dbpass);
-	if (!$con) {
-                $_SESSION['error'] = true;
-                $_SESSION['msg'] = "Failed to Establish Connection!\n". mysql_errno($con) . " : " . mysql_error($con) . "'";
-                return false;
-	}
-	if ( !mysql_select_db($db) ) {
-                $_SESSION['error'] = true;
-                $_SESSION['msg'] = "Failed to select database!\n" . mysql_errno($con) . " : " . mysql_error($con) . "'";
-                return false;
-	}
-        if ( !mysql_query($sql) ) {
-                $_SESSION['error'] = true;
-                $_SESSION['msg'] = "Failed to execute sql!\n" . mysql_errno($con) . " : " . mysql_error($con) . "'";
-                return false;
-	}
-	mysql_close();
-	return true;
-}
-
 function dbConnect() {
 	global $dbuser;
 	global $dbpass;
@@ -37,43 +10,29 @@ function dbConnect() {
 	$con = mysql_connect("localhost", $dbuser, $dbpass);
 	if (!$con) {
                 $_SESSION['error'] = true;
-                $_SESSION['msg'] = "Failed to Establish Connection!\n" . mysql_errno($con) . " : " . mysql_error($con);
+                $_SESSION['msg'] = "Failed to connect to database server!";
                 return false;
 	}
 	
 	if ( !mysql_select_db($db) ) {
                 $_SESSION['error'] = true;
-                $_SESSION['msg'] = "Failed to select database!\n" . mysql_errno($con) . " : " . mysql_error($con);
+                $_SESSION['msg'] = "Connected but can not find database $db\n" . mysql_errno($con) . " : " . mysql_error($con);
                 return false;
 	}
 	return $con;
 }
 
-function table_exists() { 
-    global $db;
-    $con = dbConnect();
-    if ($con) {
-        $tables = mysql_list_tables ($db);
-        while (list ($temp) = mysql_fetch_array ($tables)) {
-                if ($temp == 'gigs') {
-                        mysql_close();
-                        return true;
-                }
+function dbQuery($sql) {
+	$con = dbConnect();
+        if ($con) {
+            if (!mysql_query($sql) ) {
+                    $_SESSION['error'] = true;
+                    $_SESSION['msg'] = "Failed to execute sql!\n" . mysql_errno($con) . " : " . mysql_error($con) . "'";
+                    return false;
+            }
         }
-        dbQuery("
-                CREATE TABLE IF NOT EXISTS `gigs` (
-                  `id` int(11) NOT NULL AUTO_INCREMENT,
-                  `date` datetime NOT NULL,
-                  `city` text NOT NULL,
-                  `venue` text NOT NULL,
-                  `info` text NOT NULL,
-                  `tickets` text NOT NULL,
-                  KEY `id` (`id`)
-                ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=158 ;");
-        mysql_close();
-        return false;
-    }
-    return true;
+	mysql_close();
+	return true;
 }
 
 function addGig($gig) {
@@ -85,7 +44,7 @@ function editGig($gig) {
 }
 
 function removeGig($id) {
-	return dbQuery("DELETE FROM gigs WHERE id = $id");
+            return dbQuery("DELETE FROM gigs WHERE id = $id");
 }
 
 function listAll() {
@@ -170,6 +129,33 @@ class Gig
 		$this->id = $a;
 	}
 
+}
+
+function table_exists() { 
+    global $db;
+    $con = dbConnect();
+    if ($con) {
+        $tables = mysql_list_tables ($db);
+        while (list ($temp) = mysql_fetch_array ($tables)) {
+                if ($temp == 'gigs') {
+                        mysql_close();
+                        return true;
+                }
+        }
+        dbQuery("
+                CREATE TABLE IF NOT EXISTS `gigs` (
+                  `id` int(11) NOT NULL AUTO_INCREMENT,
+                  `date` datetime NOT NULL,
+                  `city` text NOT NULL,
+                  `venue` text NOT NULL,
+                  `info` text NOT NULL,
+                  `tickets` text NOT NULL,
+                  KEY `id` (`id`)
+                ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=158 ;");
+        return false;
+    }
+    mysql_close();
+    return true;
 }
 
 ?>

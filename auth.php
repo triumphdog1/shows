@@ -1,7 +1,7 @@
 <?
 //Steve's Comment
 //Database info
-$dbuser = "tgbr2";
+$dbuser = "tgbr";
 $dbpass = "tony";
 $db = "tgbr";
 
