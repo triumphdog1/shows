@@ -21,7 +21,7 @@ $(document).ready(function() {
                     $.post('control.php', { 'action': 'delete', 'id': $(this).attr('rel') }, function(data) {
                        if (data.success) {
                             reloadTable();
-                       }
+                       } else alert(data.error);
                     }, 'json');
             }
         });
@@ -176,13 +176,13 @@ $(document).ready(function() {
             e.preventDefault();
             if ($('#loginForm').valid()) {
                 $.post("control.php", $('#loginForm').serialize(), function(data) {
-                        if (data) {
+                        if (data.success) {
                                 reloadTable();
                         } else{
                                 alert("Invalid username or password.");
                                 $('#login').dialog("open");
                         }
-                });
+                }, 'json');
                 hideLogin();
             }
         });

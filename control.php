@@ -23,12 +23,13 @@ if ($action == 'next_show') {
 if ($action == 'login') {
 	$username = $_POST['username'];
 	$password = $_POST['password'];
+        $e = array();
 	if ($username == $user1 && $password == $pass1 OR $username == $user2 && $password == $pass2) {
-		echo $_SESSION['logged_in'] = true;
+		$_SESSION['logged_in'] = true;
                 $e['success'] = true;
 	} else {
-		echo $_SESSION['logged_in'] = false;
-                $e['success'] = true;
+		$_SESSION['logged_in'] = false;
+                $e['success'] = false;
 	}
         echo json_encode($e);
 }
