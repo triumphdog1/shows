@@ -33,7 +33,7 @@ $(document).ready(function() {
             var city = $('#city'+id).html();
             var venue = $('#venue'+id).html();
             var info = $('#info'+id).html();
-            var tickets = $('#tickets'+id).find('a').attr('href');
+            var tickets = ($('#tickets' + id + ' a').length) ? $('#tickets'+id).find('a').attr('href'): $('#tickets'+id).html();
             editShowsForm(date,time,city,venue,info,tickets,id);
         });
 
