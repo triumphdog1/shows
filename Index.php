@@ -39,7 +39,6 @@ $(document).ready(function() {
 
         $('#addButton').live( 'click', function() {
             $('#showsFormDialog').dialog('open');
-            showsFormValidator.resetForm();
         });
         
         var loginValidator = $('#loginForm').validate({
@@ -120,18 +119,14 @@ $(document).ready(function() {
 
         function hideLogin() {
                 $('#login').dialog("close");
-                loginValidator.resetForm();
-
+                $('#loginReset').click();
         }
 
         function hideShowsForm() {
                 $('#showsFormDialog').dialog("close");
                 $('#showsFormDialog').dialog("option", "title", "Add Show");
-                $('#info').html("");
                 $('#reset').click();
-                showsFormValidator.resetForm();
-                $('#tickets').val("http://");
-
+                $('#action').val('add');
         }
 
         function editShowsForm(date, time, city, venue, info, tickets, id) {
@@ -167,6 +162,7 @@ $(document).ready(function() {
                 defaultDate:0,
                 constrainInput:true
         });
+        
         $('#time').timepicker({
                 showPeriod: true,
                 showLeadingZero: false,
@@ -270,6 +266,7 @@ $(document).ready(function() {
 				<label for="password">Password:</label>
 				<input type="password" name="password" id="password" class="required" />
 				<input type="hidden" name="action" value="login" />
+                                <input type="reset" name="loginReset" id="loginReset" style="display:none">
 			</fieldset>
 		</form>
 	</div>
@@ -304,6 +301,7 @@ $(document).ready(function() {
 				<br />
 				<input type="hidden" name="action" id="action" value="add" />
                                 <input type="hidden" name="id" id="id" value="" />
+                                <input type="reset" name="reset" id="reset" style="display:none">
 			</fieldset>
 		</form>
 	</div>
