@@ -14,19 +14,16 @@ function dbQuery($sql) {
 	if (!$con) {
                 $_SESSION['error'] = true;
                 $_SESSION['msg'] = "Failed to Establish Connection!\n". mysql_errno($con) . " : " . mysql_error($con) . "'";
-                echo json_encode($e);
                 return false;
 	}
 	if ( !mysql_select_db($db) ) {
                 $_SESSION['error'] = true;
                 $_SESSION['msg'] = "Failed to select database!\n" . mysql_errno($con) . " : " . mysql_error($con) . "'";
-                echo json_encode($e);
                 return false;
 	}
         if ( !mysql_query($sql) ) {
                 $_SESSION['error'] = true;
                 $_SESSION['msg'] = "Failed to execute sql!\n" . mysql_errno($con) . " : " . mysql_error($con) . "'";
-                echo json_encode($e);
                 return false;
 	}
 	mysql_close();
@@ -40,8 +37,7 @@ function dbConnect() {
 	$con = mysql_connect("localhost", $dbuser, $dbpass);
 	if (!$con) {
                 $_SESSION['error'] = true;
-                $_SESSION['msg'] = "Failed to Establish Connection!\n";// . mysql_errno($con) . " : " . mysql_error($con);
-                echo json_encode($e);
+                $_SESSION['msg'] = "Failed to Establish Connection!\n" . mysql_errno($con) . " : " . mysql_error($con);
                 return false;
 	}
 	
@@ -105,10 +101,9 @@ function listAll() {
                 }
             } else {
                 $a['success'] = false;
-                $a['error'] = "Failed to locate database tables!\n";
+                $a['error'] = "Failed to locate database tables!\n" . mysql_errno($con) . " : " . mysql_error($con) . "'";
                 $_SESSION['error'] = true;
                 $_SESSION['msg'] = $e['error'];
-                echo json_encode($a);
             }
             mysql_close();
             return $a;
@@ -128,10 +123,9 @@ function listUpcoming() {
                 }
             } else {
                 $a['success'] = false;
-                $a['error'] = "Failed to locate database tables!";
+                $a['error'] = "Failed to locate database tables!" . mysql_errno($con) . " : " . mysql_error($con) . "'";
                 $_SESSION['error'] = true;
                 $_SESSION['msg'] = $e['error'];
-                echo json_encode($a);
             }
             mysql_close();
             return $a;

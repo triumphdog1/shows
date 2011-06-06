@@ -56,6 +56,8 @@ if ($action == 'edit' && $logged_in) {
         if ($_SESSION['error']) {
             $a['success'] = false;
             $a['error'] = $_SESSION['msg'];
+            $_SESSION['error'] = false;
+            $_SESSION['msg'] = "";
         } else {
             $a['success'] = true;
         }
@@ -74,6 +76,8 @@ if ($action == 'add' && $logged_in) {
         if ($_SESSION['error']) {
             $a['success'] = false;
             $a['error'] = $_SESSION['msg'];
+            $_SESSION['error'] = false;
+            $_SESSION['msg'] = "";
         } else {
             $a['success'] = true;
         }
@@ -85,6 +89,8 @@ if ($action == 'delete' && $logged_in) {
         if ($_SESSION['error']) {
             $a['success'] = false;
             $a['error'] = $_SESSION['msg'];
+            $_SESSION['error'] = false;
+            $_SESSION['msg'] = "";
         } else {
             $a['success'] = true;
         }
@@ -98,6 +104,8 @@ if ($action == 'showsTable') {
     if ($_SESSION['error']) {
         $aReturn['success'] = false;
         $aReturn['error'] = $_SESSION['msg'];
+        $_SESSION['error'] = false;
+        $_SESSION['msg'] = "";
     } else {
         if (count($gigs) > 0) {
             foreach($gigs as $gig) {    
