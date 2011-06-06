@@ -14,13 +14,16 @@ require_once('model.php');
 <script type="text/javascript">
 
 $(document).ready(function() {
-    
+        reloadTable();
+        checkLogin();
         $('.delete_button').live( 'click', function() {
             var answer = confirm('Really delete this gig?');
             if (answer) {
-                    $.post('ajax.php', { 'action': 'delete', 'id': $(this).attr('rel') }, function() {
+                    $.post('control.php', { 'action': 'delete', 'id': $(this).attr('rel') }, function(data) {
+                       if (data.success) {
                             reloadTable();
-                    });
+                       }
+                    }, 'json');
             }
         });
 
@@ -37,79 +40,9 @@ $(document).ready(function() {
 
         $('#addButton').live( 'click', function() {
             $('#showsFormDialog').dialog('open');
+            showsFormValidator.resetForm();
         });
         
-        function reloadTable() {               
-            $.post('control.php', { 'action': 'showsTable' }, function(data) {
-                    $('#showsTable').html(data);
-            });
-            $('#showsFrame', top.document).height('1000px');
-        }
-
-        function checkLogin() {
-                $.post('control.php', { 'action': 'checkLogin' }, function(data) {
-                        data ? $('#login-button').attr('src', 'images/logout_button.gif') : $('#login-button').attr('src', 'images/login_button.gif');
-                });
-        }
-
-        function hideLogin() {
-                $('#login').dialog("close");
-                loginValidator.resetForm();
-
-        }
-
-        function hideShowsForm() {
-                $('#showsFormDialog').dialog("close");
-                $('#showsFormDialog').dialog("option", "title", "Add Show");
-                $('#info').html("");
-                $('#reset').click();
-                showsFormValidator.resetForm();
-                $('#tickets').val("http://")
-
-        }
-
-        function editShowsForm(date, time, city, venue, info, tickets, id) {
-            $('.date').datepicker("option", {
-                minDate: null,
-                defaultDate: date
-            });
-
-            $('#showsFormDialog').dialog("option", "title", "Edit Show");
-            $('#id').val(id);
-            $('#city').val($("<div/>").html(city).text());
-            $('#venue').val($("<div/>").html(venue).text());
-            $('#info').html($("<div/>").html(info).text());
-            $('#tickets').val($("<div/>").html(tickets).text());
-            $('#action').val('edit');
-            $('#showsFormDialog').dialog("open");
-            $('#time').timepicker('setTime', time);
-            $('#date').datepicker('setDate', date);
-            $('#date').datepicker('hide');
-            $('#city').focus();
-        }
-        
-        $('form').live( 'keyup', function(e) {
-            if(e.keyCode == 13) {       
-                $(this).submit();
-            }
-        });
-
-
-        $('#date').datepicker({
-                minDate:0,
-                dateFormat: "m/d/yy",
-                defaultDate:0,
-                constrainInput:true
-        });
-        $('#time').timepicker({
-                showPeriod: true,
-                showLeadingZero: false,
-                amPmText: ['am', 'pm'],
-                defaultTime:"4:20 pm"
-        });
-        reloadTable();
-        checkLogin();
-
         var loginValidator = $('#loginForm').validate({
             onsubmit: false,
             rules: {
@@ -153,6 +86,95 @@ $(document).ready(function() {
                     required: false
                 }
             }
+        });
+        
+        function reloadTable() {
+            $.post('control.php', { 'action': 'showsTable' }, function(data) {
+                    if (data.success){
+                        var s = "<table id='showsTable'>";
+                        $.each(data.rows, function(d,row){
+                            s += "<tr valign='top'><td><span id='date" + row['id'] + "'>" + row['date'] + "</span><br />"
+                                + "<span id='time" + row['id'] + "'>" + row['time'] + "</span><br /><br /><br /></td>"
+                                + "<td><span id='city" + row['id'] + "'>" + row['city'] + "</span><br /><span id='venue" + row['id'] + "'>" + row['venue'] + "</span></td>"
+                                + "<td width='150'><span id='info" + row['id'] + "'>" + row['info'] + "</span></td><td style='padding-right:10px;'>"
+                                + "<span id='tickets" + row['id'] + "' rel='" + row['tickets'] + "'>"+ row['tickets'] + "</span></td>";
+                            if (data.logged_in) {
+                                s += "<td><img src='images/edit_button.gif' class='edit_button' rel='" + row['id'] + "'></td>"
+                                    + "<td><img src='images/delete_button.gif' class='delete_button' rel='" + row['id'] + "'></td>";
+                            }
+                            s += "</tr>";
+                        });
+                        s += "</table>";
+                        if (data.logged_in) {
+                            s += "<div align=center><input type='button' id='addButton' value='Add Show'></div>";
+                        }
+                        $('#showsTable').html(s);
+                    }else{
+                        $('#shows.Table').html(data.error);
+                    }
+            }, 'json');
+        }
+
+        function checkLogin() {
+                $.post('control.php', { 'action': 'checkLogin' }, function(data) {
+                        data ? $('#login-button').attr('src', 'images/logout_button.gif') : $('#login-button').attr('src', 'images/login_button.gif');
+                });
+        }
+
+        function hideLogin() {
+                $('#login').dialog("close");
+                loginValidator.resetForm();
+
+        }
+
+        function hideShowsForm() {
+                $('#showsFormDialog').dialog("close");
+                $('#showsFormDialog').dialog("option", "title", "Add Show");
+                $('#info').html("");
+                $('#reset').click();
+                showsFormValidator.resetForm();
+                $('#tickets').val("http://");
+
+        }
+
+        function editShowsForm(date, time, city, venue, info, tickets, id) {
+            $('.date').datepicker("option", {
+                minDate: null,
+                defaultDate: date
+            });
+
+            $('#showsFormDialog').dialog("option", "title", "Edit Show");
+            $('#id').val(id);
+            $('#city').val($("<div/>").html(city).text());
+            $('#venue').val($("<div/>").html(venue).text());
+            $('#info').html($("<div/>").html(info).text());
+            $('#tickets').val($("<div/>").html(tickets).text());
+            $('#action').val('edit');
+            $('#showsFormDialog').dialog("open");
+            $('#time').timepicker('setTime', time);
+            $('#date').datepicker('setDate', date);
+            $('#date').datepicker('hide');
+            $('#city').focus();
+        }
+        
+        $('form').live( 'keyup', function(e) {
+            if(e.keyCode == 13) {       
+                $(this).submit();
+            }
+        });
+
+
+        $('#date').datepicker({
+                minDate:0,
+                dateFormat: "m/d/yy",
+                defaultDate:0,
+                constrainInput:true
+        });
+        $('#time').timepicker({
+                showPeriod: true,
+                showLeadingZero: false,
+                amPmText: ['am', 'pm'],
+                defaultTime:"4:20 pm"
         });
 
         $('#loginForm').submit(function(e) {
@@ -222,10 +244,10 @@ $(document).ready(function() {
             e.preventDefault();
             if (showsFormValidator.form()) {
                 $.post('control.php', $('#showsForm').serialize(), function(data) {
-                    if (data) alert(data);
+                    if (!data.success) alert(data.error);
                     hideShowsForm();
                     reloadTable();
-                });
+                }, 'json');
             }
         });
 });
@@ -239,7 +261,7 @@ $(document).ready(function() {
 		<br /><br />
 		<div id="header">Shows</div>
 		<br /><br />
-		<div id="showsTable""></div>
+		<div id="showsTable"></div>
 	</div>
 </body>
 
