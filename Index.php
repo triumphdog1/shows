@@ -33,7 +33,7 @@ $(document).ready(function() {
             var city = $('#city'+id).html();
             var venue = $('#venue'+id).html();
             var info = $('#info'+id).html();
-            var tickets = $('#tickets'+id).attr('rel');
+            var tickets = $('#tickets'+id).find('a').attr('href');
             editShowsForm(date,time,city,venue,info,tickets,id);
         });
 
@@ -98,7 +98,7 @@ $(document).ready(function() {
                                     + "<span id='time" + row['id'] + "'>" + row['time'] + "</span><br /><br /><br /></td>"
                                     + "<td><span id='city" + row['id'] + "'>" + row['city'] + "</span><br /><span id='venue" + row['id'] + "'>" + row['venue'] + "</span></td>"
                                     + "<td width='150'><span id='info" + row['id'] + "'>" + row['info'] + "</span></td><td style='padding-right:10px;'>"
-                                    + "<span id='tickets" + row['id'] + "' rel='" + row['tickets'] + "'>"+ row['tickets'] + "</span></td>";
+                                    + "<span id='tickets" + row['id'] + "'>"+ row['tickets'] + "</span></td>";
                                 if (data.logged_in) {
                                     s += "<td><img src='images/edit_button.gif' class='edit_button' rel='" + row['id'] + "'></td>"
                                         + "<td><img src='images/delete_button.gif' class='delete_button' rel='" + row['id'] + "'></td>";
@@ -130,7 +130,6 @@ $(document).ready(function() {
                 $('#info').html('');
         }
 
-        // TODO: editShowsForm not displaying ticket link in form, but only when its a link.
         function editShowsForm(date, time, city, venue, info, tickets, id) {
             $('#date').datepicker("option", {
                 minDate: null,
