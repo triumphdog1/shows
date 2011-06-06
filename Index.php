@@ -127,13 +127,16 @@ $(document).ready(function() {
                 $('#showsFormDialog').dialog("option", "title", "Add Show");
                 $('#reset').click();
                 $('#action').val('add');
+                $('#info').html('');
         }
 
+        // TODO: editShowsForm not displaying ticket link in form, but only when its a link.
         function editShowsForm(date, time, city, venue, info, tickets, id) {
-            $('.date').datepicker("option", {
+            $('#date').datepicker("option", {
                 minDate: null,
                 defaultDate: date
             });
+            $('#date').datepicker("refresh");
 
             $('#showsFormDialog').dialog("option", "title", "Edit Show");
             $('#id').val(id);
