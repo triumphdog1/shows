@@ -95,7 +95,7 @@ function listUpcoming() {
 function nextShow() {
         $con = dbConnect();
 	if($con) {
-            $sql = "SELECT * FROM gigs WHERE date >= '" . date() . "' ORDER BY date DESC";
+            $sql = "SELECT * FROM gigs WHERE date >= CURDATE() ORDER BY date ASC";
             $res = mysql_query($sql);
             if ($row = mysql_fetch_array($res)) {
                     $a = array();

@@ -6,7 +6,7 @@ $action = isset($_POST['action']) ? $_POST['action'] : false;
 
 function ticketDisplay($tickets) {
 	if (substr($tickets, 0 , 7) == 'http://') {
-		return '<a href="' . $tickets . '" target="_NEW"><img src="images/tickets_button.gif"></a>';
+		return "<a href='" . $tickets . "' target='_NEW'><img src='images/tickets_button.gif'></a>";
 	}
 	return $tickets;
 }
@@ -99,7 +99,6 @@ if ($action == 'delete' && $logged_in) {
 
 if ($action == 'showsTable') {
     global $logged_in;
-    global $err;
     $gigs = $logged_in ? listAll() : listUpcoming();
     if ($_SESSION['error']) {
         $aReturn['success'] = false;
@@ -121,6 +120,37 @@ if ($action == 'showsTable') {
         } else $aReturn['rows'] = false;
         $aReturn['logged_in'] = $logged_in;
         $aReturn['success'] = true;
+    }
+    echo json_encode($aReturn);
+}
+
+if ($action == 'displayShows') {
+    $gigs = listUpcoming();
+    if ($_SESSION['error']) {
+        $aReturn['success'] = false;
+        $aReturn['error'] = $_SESSION['msg'];
+        $_SESSION['error'] = false;
+        $_SESSION['msg'] = "";
+    } else {
+        if (count($gigs) > 0) {
+            $html = "<table id='showsTable' cellpadding='30px'>";
+            foreach($gigs as $gig) {
+                $date = date('n/j/Y', strtotime($gig->date));
+                $time = date('g:i a', strtotime($gig->date));
+                $city = html_entity_decode($gig->city);
+                $venue = html_entity_decode($gig->venue);
+                $info = html_entity_decode($gig->info);
+                $tickets = html_entity_decode($gig->tickets);
+                if (substr($tickets, 0 , 7) == 'http://') {
+                    $tickets = "<a href='$tickets' target='_NEW'><img src='shows/images/tickets_button.gif'></a>";
+                }
+                $html .= "<tr><td>$date<br />$time<br /></td><td>$city<br />$venue</td>"
+                    . "<td>$info</td><td>$tickets</td></tr>";
+            }
+            $html .= "</table>";
+        } else $html = "Currently no upcoming shows.  Check back soon!";
+        $aReturn['success'] = true;
+        $aReturn['msg'] = $html;
     }
     echo json_encode($aReturn);
 }
