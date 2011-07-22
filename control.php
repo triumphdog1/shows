@@ -3,7 +3,7 @@
 require_once("model.php");
 $logged_in = $_SESSION['logged_in'];
 $action = isset($_POST['action']) ? $_POST['action'] : false;
-$shows = new shows();
+$shows = new Shows();
 
 function ticketDisplay($tickets) {
 	if (substr($tickets, 0 , 7) == 'http://') {
@@ -54,15 +54,16 @@ if ($action == 'edit' && $logged_in) {
 	$gig = new Gig($date, $city, $venue, $info, $tickets);
 	$gig->setId($id);
 	$shows->editGig($gig);
-        if ($_SESSION['error']) {
-            $a['success'] = false;
-            $a['error'] = $_SESSION['msg'];
-            $_SESSION['error'] = false;
-            $_SESSION['msg'] = "";
-        } else {
-            $a['success'] = true;
-        }
-        echo json_encode($a);
+	echo $shows;
+	if ($_SESSION['error']) {
+		$a['success'] = false;
+		$a['error'] = $_SESSION['msg'];
+		$_SESSION['error'] = false;
+		$_SESSION['msg'] = "";
+	} else {
+		$a['success'] = true;
+	}
+	echo json_encode($a);
 }
 
 if ($action == 'add' && $logged_in) {
@@ -109,7 +110,7 @@ if ($action == 'showsTable') {
     } else {
         if (count($gigs) > 0) {
             foreach($gigs as $gig) {    
-                $a['id'] = $gig->id;
+                $a['id'] = $gig->getId();
                 $a['date'] = date('n/j/Y', strtotime($gig->date));
                 $a['time'] = date('g:i a', strtotime($gig->date));
                 $a['city'] = html_entity_decode($gig->city);

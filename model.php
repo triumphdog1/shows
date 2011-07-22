@@ -1,7 +1,8 @@
 <?
 require_once('auth.php');
 session_start();
-error_reporting('E_ALL ^ E_NOTICE');
+error_reporting('E_ALL ^ E_WARNING');
+
 class Gig
 {
 	private $id;
@@ -21,80 +22,8 @@ class Gig
 	public function setId($a) {
 		$this->id = $a;
 	}
-}
-
-class shows extends db {
-	public function addGig($gig) {
-		return dbQuery("INSERT INTO gigs (date, city, venue, info, tickets) VALUES(FROM_UNIXTIME('$gig->date'), '$gig->city', '$gig->venue', '$gig->info', '$gig->tickets')");
-	}
-
-	public function editGig($gig) {
-		return dbQuery("UPDATE gigs SET date = FROM_UNIXTIME('$gig->date'), city = '$gig->city', venue = '$gig->venue', info = '$gig->info', tickets = '$gig->tickets' WHERE id = '$gig->id'");
-	}
-
-	public function removeGig($id) {
-				return dbQuery("DELETE FROM gigs WHERE id = $id");
-	}
-
-	public function listAll() {
-			$con = dbConnect();
-		if($con){
-				$a = array();
-				$res = mysql_query("SELECT * FROM gigs ORDER BY date ASC");
-				if ($res) {
-					While ($row = mysql_fetch_array($res)) {
-							$gig = new Gig($row['date'], $row['city'], $row['venue'], $row['info'], $row['tickets']);
-							$gig->setId($row['id']);
-							$a[$row['id']] = $gig;
-					}
-				} else {
-					$a['success'] = false;
-					$a['error'] = "Failed to locate database tables!\n" . mysql_errno($con) . " : " . mysql_error($con) . "'";
-					$_SESSION['error'] = true;
-					$_SESSION['msg'] = $e['error'];
-				}
-				mysql_close();
-				return $a;
-			} else return false;
-	}
-
-	public function listUpcoming() {
-			$con = dbConnect();
-		if($con) {
-				$a = array();
-				$res = mysql_query("SELECT * FROM gigs WHERE date >= CURDATE() ORDER BY date ASC");
-				if ($res) {
-					While ($row = mysql_fetch_array($res)) {
-							$gig = new Gig($row['date'], $row['city'], $row['venue'], $row['info'], $row['tickets']);
-							$gig->setId($row['id']);
-							$a[$row['id']] = $gig;
-					}
-				} else {
-					$a['success'] = false;
-					$a['error'] = "Failed to locate database tables!" . mysql_errno($con) . " : " . mysql_error($con) . "'";
-					$_SESSION['error'] = true;
-					$_SESSION['msg'] = $e['error'];
-				}
-				mysql_close();
-				return $a;
-			} else return false;
-	}
-
-
-	public function nextShow() {
-			$con = dbConnect();
-		if($con) {
-				$sql = "SELECT * FROM gigs WHERE date >= CURDATE() ORDER BY date ASC";
-				$res = mysql_query($sql);
-				if ($row = mysql_fetch_array($res)) {
-						$a = array();
-						$a['date'] = $row['date'];
-						$a['city'] = $row['city'];
-						$a['venue'] = $row['venue'];
-				} else return false;
-				mysql_close();
-				return $a;
-			}
+	public function getId($a) {
+		return $this->id;
 	}
 }
 
@@ -130,44 +59,79 @@ class db {
 	}
 }
 
-function dbQuery($sql) {
-	$con = dbConnect();
-        if ($con) {
-            if (!mysql_query($sql) ) {
-                    $_SESSION['error'] = true;
-                    $_SESSION['msg'] = "Failed to execute sql!\n" . mysql_errno($con) . " : " . mysql_error($con) . "'";
-                    return false;
-            }
-        }
-	mysql_close();
-	return true;
-}
+class Shows extends db {
+	public function addGig($gig) {
+		return $this->dbQuery("INSERT INTO gigs (date, city, venue, info, tickets) VALUES(FROM_UNIXTIME('$gig->date'), '$gig->city', '$gig->venue', '$gig->info', '$gig->tickets')");
+	}
 
-function table_exists() { 
-    global $db;
-    $con = dbConnect();
-    if ($con) {
-        $tables = mysql_list_tables ($db);
-        while (list ($temp) = mysql_fetch_array ($tables)) {
-                if ($temp == 'gigs') {
-                        mysql_close();
-                        return true;
-                }
-        }
-        dbQuery("
-                CREATE TABLE IF NOT EXISTS `gigs` (
-                  `id` int(11) NOT NULL AUTO_INCREMENT,
-                  `date` datetime NOT NULL,
-                  `city` text NOT NULL,
-                  `venue` text NOT NULL,
-                  `info` text NOT NULL,
-                  `tickets` text NOT NULL,
-                  KEY `id` (`id`)
-                ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=158 ;");
-        return false;
-    }
-    mysql_close();
-    return true;
+	public function editGig($gig) {
+		return "EUREKA";
+		//return parent::dbQuery("UPDATE gigs SET date = FROM_UNIXTIME('$gig->date'), city = '$gig->city', venue = '$gig->venue', info = '$gig->info', tickets = '$gig->tickets' WHERE id = '$gig->id'");
+	}
+
+	public function removeGig($id) {
+		return $this->dbQuery("DELETE FROM gigs WHERE id = $id");
+	}
+
+	public function listAll() {
+		$con = $this->dbConnect();
+		if($con){
+			$a = array();
+			$res = mysql_query("SELECT * FROM gigs ORDER BY date ASC");
+			if ($res) {
+				While ($row = mysql_fetch_array($res)) {
+						$gig = new Gig($row['date'], $row['city'], $row['venue'], $row['info'], $row['tickets']);
+						$gig->setId($row['id']);
+						$a[$row['id']] = $gig;
+				}
+			} else {
+				$a['success'] = false;
+				$a['error'] = "Failed to locate database tables!\n" . mysql_errno($con) . " : " . mysql_error($con) . "'";
+				$_SESSION['error'] = true;
+				$_SESSION['msg'] = $e['error'];
+			}
+			mysql_close();
+			return $a;
+		} else return false;
+	}
+	public function listUpcoming() {
+		$con = $this->dbConnect();
+		if($con) {
+				$a = array();
+				$res = mysql_query("SELECT * FROM gigs WHERE date >= CURDATE() ORDER BY date ASC");
+				if ($res) {
+					While ($row = mysql_fetch_array($res)) {
+							$gig = new Gig($row['date'], $row['city'], $row['venue'], $row['info'], $row['tickets']);
+							$gig->setId($row['id']);
+							$a[$row['id']] = $gig;
+					}
+				} else {
+					$a['success'] = false;
+					$a['error'] = "Failed to locate database tables!" . mysql_errno($con) . " : " . mysql_error($con) . "'";
+					$_SESSION['error'] = true;
+					$_SESSION['msg'] = $e['error'];
+				}
+				mysql_close();
+				return $a;
+			} else return false;
+	}
+
+
+	public function nextShow() {
+		$con = $this->dbConnect();
+		if($con) {
+				$sql = "SELECT * FROM gigs WHERE date >= CURDATE() ORDER BY date ASC";
+				$res = mysql_query($sql);
+				if ($row = mysql_fetch_array($res)) {
+						$a = array();
+						$a['date'] = $row['date'];
+						$a['city'] = $row['city'];
+						$a['venue'] = $row['venue'];
+				} else return false;
+				mysql_close();
+				return $a;
+			}
+	}
 }
 
 ?>
