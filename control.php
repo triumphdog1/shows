@@ -3,6 +3,7 @@
 require_once("model.php");
 $logged_in = $_SESSION['logged_in'];
 $action = isset($_POST['action']) ? $_POST['action'] : false;
+$shows = new shows();
 
 function ticketDisplay($tickets) {
 	if (substr($tickets, 0 , 7) == 'http://') {
@@ -12,7 +13,7 @@ function ticketDisplay($tickets) {
 }
 
 if ($action == 'next_show') {
-        $nextShow = nextShow();
+        $nextShow = $shows->nextShow();
 	if ($nextShow) {
 		echo date('M j, Y', strtotime($nextShow['date'])) . " @ " . $nextShow['venue'] . " in " . $nextShow['city'];
 	} else {		
@@ -52,7 +53,7 @@ if ($action == 'edit' && $logged_in) {
 	if($tickets == "http://") $tickets = "";
 	$gig = new Gig($date, $city, $venue, $info, $tickets);
 	$gig->setId($id);
-	editGig($gig);
+	$shows->editGig($gig);
         if ($_SESSION['error']) {
             $a['success'] = false;
             $a['error'] = $_SESSION['msg'];
@@ -72,7 +73,7 @@ if ($action == 'add' && $logged_in) {
 	$tickets = htmlentities($_POST['tickets'], ENT_QUOTES);
 	if($tickets == "http://") $tickets = "";
 	$gig = new Gig($date, $city, $venue, $info, $tickets);
-	addGig($gig);
+	$shows->addGig($gig);
         if ($_SESSION['error']) {
             $a['success'] = false;
             $a['error'] = $_SESSION['msg'];
@@ -85,7 +86,7 @@ if ($action == 'add' && $logged_in) {
 }
 
 if ($action == 'delete' && $logged_in) {
-	removeGig($_POST['id']);
+	$shows->removeGig($_POST['id']);
         if ($_SESSION['error']) {
             $a['success'] = false;
             $a['error'] = $_SESSION['msg'];
@@ -99,7 +100,7 @@ if ($action == 'delete' && $logged_in) {
 
 if ($action == 'showsTable') {
     global $logged_in;
-    $gigs = $logged_in ? listAll() : listUpcoming();
+    $gigs = $logged_in ? $shows->listAll() : $shows->listUpcoming();
     if ($_SESSION['error']) {
         $aReturn['success'] = false;
         $aReturn['error'] = $_SESSION['msg'];
@@ -125,7 +126,7 @@ if ($action == 'showsTable') {
 }
 
 if ($action == 'displayShows') {
-    $gigs = listUpcoming();
+    $gigs = $shows->listUpcoming();
     if ($_SESSION['error']) {
         $aReturn['success'] = false;
         $aReturn['error'] = $_SESSION['msg'];
