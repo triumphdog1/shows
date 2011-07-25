@@ -1,7 +1,5 @@
 <!DOCTYPE HTML>
-<?
-require_once('model.php');
-?>
+
 <html>
 
 

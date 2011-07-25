@@ -51,10 +51,9 @@ if ($action == 'edit' && $logged_in) {
 	$info = htmlentities($_POST['info'], ENT_QUOTES);
 	$tickets = htmlentities($_POST['tickets'], ENT_QUOTES);
 	if($tickets == "http://") $tickets = "";
-	$gig = new Gig($date, $city, $venue, $info, $tickets);
-	$gig->setId($id);
-	echo json_encode($gig);
-	echo $shows->editGig($gig);
+	$gig = new Gig($date, $city, $venue, $info, $tickets, $id);
+	$shows->editGig($gig);
+        $a = array();
 	if ($_SESSION['error']) {
 		$a['success'] = false;
 		$a['error'] = $_SESSION['msg'];
@@ -83,7 +82,7 @@ if ($action == 'add' && $logged_in) {
         } else {
             $a['success'] = true;
         }
-        json_encode($a);
+        echo json_encode($a);
 }
 
 if ($action == 'delete' && $logged_in) {
