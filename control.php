@@ -1,6 +1,6 @@
 <?
 
-require_once("model.php");
+require_once("shows.php");
 $logged_in = $_SESSION['logged_in'];
 $action = isset($_POST['action']) ? $_POST['action'] : false;
 $shows = new Shows();
@@ -53,8 +53,8 @@ if ($action == 'edit' && $logged_in) {
 	if($tickets == "http://") $tickets = "";
 	$gig = new Gig($date, $city, $venue, $info, $tickets);
 	$gig->setId($id);
-	$shows->editGig($gig);
-	echo $shows;
+	echo json_encode($gig);
+	echo $shows->editGig($gig);
 	if ($_SESSION['error']) {
 		$a['success'] = false;
 		$a['error'] = $_SESSION['msg'];
@@ -100,8 +100,8 @@ if ($action == 'delete' && $logged_in) {
 }
 
 if ($action == 'showsTable') {
-    global $logged_in;
-    $gigs = $logged_in ? $shows->listAll() : $shows->listUpcoming();
+    //$gigs = $logged_in ? $shows->listAll() : $shows->listUpcoming();
+	$gigs = $shows->listAll();
     if ($_SESSION['error']) {
         $aReturn['success'] = false;
         $aReturn['error'] = $_SESSION['msg'];
