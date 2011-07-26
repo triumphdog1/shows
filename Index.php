@@ -43,38 +43,38 @@
 </div>
 
 <div style="display:none">
-	<div id="showsFormDialog" title="Add Show">
-            <form method="post" id="showsForm" action="">
-			<fieldset>
-				<table>
-					<tr>
-						<td>Date:</td>
-						<td>Time:</td>
-					</tr>
-					<tr>
-						<td><input type='text' name='date' id='date' /></td>
-						<td><input type='text' name='time' id='time' /></td>
-					</tr>
-				</table>
-				<br />
-				<label for="city">City:</label><br />
-				<input name="city" id="city" size="42" maxlength="50" /><br />
-				<br />
-				<label for="venue">Venue:</label><br />
-				<input name="venue" id="venue" size="42" maxlength="100" /><br />
-				<br />
-				<label for="info">More Information:</label><br />
-				<textarea name="info" id="info" rows="4" cols="41"></textarea><br />
-				<br />
-				<label for="tickets">Ticket link or price</label><br />
-				<input name="tickets" id="tickets" size="42" value="http://" maxlength="250" /><br />
-				<br />
-				<input type="hidden" name="action" id="action" value="add" />
-                                <input type="hidden" name="id" id="id" value="" />
-                                <input type="reset" name="reset" id="reset" style="display:none">
-			</fieldset>
-		</form>
-	</div>
+    <div id="showsFormDialog" title="Add Show">
+        <form method="post" id="showsForm" action="">
+            <fieldset>
+                    <table>
+                            <tr>
+                                    <td>Date:</td>
+                                    <td>Time:</td>
+                            </tr>
+                            <tr>
+                                    <td><input type='text' name='date' id='date' /></td>
+                                    <td><input type='text' name='time' id='time' /></td>
+                            </tr>
+                    </table>
+                    <br />
+                    <label for="city">City:</label><br />
+                    <input name="city" id="city" size="42" maxlength="50" /><br />
+                    <br />
+                    <label for="venue">Venue:</label><br />
+                    <input name="venue" id="venue" size="42" maxlength="100" /><br />
+                    <br />
+                    <label for="info">More Information:</label><br />
+                    <textarea name="info" id="info" rows="4" cols="41"></textarea><br />
+                    <br />
+                    <label for="tickets">Ticket link or price</label><br />
+                    <input name="tickets" id="tickets" size="42" value="http://" maxlength="250" /><br />
+                    <br />
+                    <input type="hidden" name="action" id="action" value="add" />
+                    <input type="hidden" name="id" id="id" value="" />
+                    <input type="reset" name="reset" id="reset" style="display:none">
+            </fieldset>
+        </form>
+    </div>
 </div>
 
 </html>
