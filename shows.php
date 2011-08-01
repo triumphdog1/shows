@@ -1,7 +1,9 @@
 <?PHP
+
 require_once('auth.php');
 require_once('db.php');
 require_once('gig.php');
+require_once('users.php');
 session_start();
 error_reporting('E_ALL');
 
@@ -22,7 +24,7 @@ class Shows extends DB {
 	public function listAll($p=null) {
 		$a = array();
 		$sql = "SELECT * FROM gigs ";
-		if (!$this->checkLoggedIn() || $p=="upcoming") $sql .= "WHERE datetime >= CURDATE() ";
+		if ($p == 'upcoming') $sql .= "WHERE datetime >= CURDATE() ";
 		$sql .= "ORDER BY datetime ASC";
 		$res = parent::dbFetch($sql);
 		if ($res) {
@@ -43,7 +45,7 @@ class Shows extends DB {
 	}
 	
 	public function checkLoggedIn() {
-            return $_SESSION['logged_in'];
+            return $_SESSION['logged_in'] ? true:false;
 	}
         
         public function checkError() {

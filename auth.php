@@ -14,4 +14,24 @@ $pass2 = "tony";
 //Contact email
 $contactEmail = "joshblancett@gmail.com";
 
+/*
+require_once("db.php");
+
+class Auth extends DB {
+    
+    public function checkLogin() {
+        
+    }
+    
+    public funciton doLogin() {
+        
+    }
+    
+    public function logout() {
+        
+    }
+    
+}
+*/
+
 ?>

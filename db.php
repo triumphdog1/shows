@@ -1,5 +1,5 @@
 <?PHP
-
+require_once("auth.php");
 class DB {
 
 	public function dbConnect() {
@@ -24,7 +24,7 @@ class DB {
                     $res = mysql_query($sql);
                     if (!$res) {
                         $_SESSION['error'] = true;
-                        $this->setError("Failed to execute sql!\n" . mysql_errno($con) . " : " . mysql_error($con) . "'");
+                        $this->setError("Failed to execute sql!\n" . mysql_errno($con) . " : " . mysql_error($con));
                         return false;
                     }
                 }
@@ -41,7 +41,7 @@ class DB {
             if ($con) {
                 $res = mysql_query($sql);
                 if (!$res) {
-                    $this->setError("Failed to execute sql!\n" . mysql_errno($con) . " : " . mysql_error($con) . "'");
+                    $this->setError("Failed to execute sql!\n" . mysql_errno($con) . " : " . mysql_error($con));
                     return false;
                 }
             }
