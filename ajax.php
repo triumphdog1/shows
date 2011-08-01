@@ -88,4 +88,52 @@ if ($action == 'showsTable') {
     } else echo json_encode($shows->checkError());
 }
 
+if ($action == 'cpReload') {
+    if ($logged_in && $admin) {
+	$u = $users->listUsers();
+	if (count($u) > 0) {
+	    $r = array();
+	    $r['success'] = true;
+	    $r['rows'] = $u;
+	    echo json_encode($r);
+	} else echo json_encode($users->checkError());
+    } else {
+	$r = array();
+	$r['success'] = false;
+	$r['error'] = "You don't have access to this!";
+	echo json_encode($r);
+    }
+}
+
+if ($action == 'removeUser') {
+    if ($logged_in && $admin) {
+	$users->removeUser($_POST['id']);
+	echo json_encode($shows->checkError());
+    }
+}
+
+if ($action == 'makeAdmin') {
+    if ($logged_in && $admin) {
+	$users->setAdmin($_POST['id'], 1);
+	echo json_encode($shows->checkError());
+    }
+}
+
+if ($action == 'noAdmin') {
+    if ($logged_in && $admin) {
+	$users->setAdmin($_POST['id'], 0);
+	echo json_encode($shows->checkError());
+    }
+}
+
+if ($action == 'changePass' && $logged_in) {
+    $users->changePass($_POST['id'], $_POST['pass']);
+    echo json_encode($users->checkError());
+}
+
+if ($action == 'addUser' && $logged_in && $admin) {
+    $users->addUser($_POST['user'], md5($_POST['pass']), $_POST['addUserAdmin']);
+    echo json_encode($users->checkError());
+}
+
 ?>

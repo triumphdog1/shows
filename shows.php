@@ -48,16 +48,6 @@ class Shows extends DB {
             return $_SESSION['logged_in'] ? true:false;
 	}
         
-        public function checkError() {
-            $a = array();
-	    $a['success'] = $_SESSION['error'] ? false:true;
-            if ($_SESSION['error']) {
-                $a['error'] = $_SESSION['msg'];
-                $this->clearError();
-            }
-            return $a;
-        }
-        
 }
 
 ?>

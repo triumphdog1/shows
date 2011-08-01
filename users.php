@@ -24,6 +24,10 @@ class Users extends DB {
         return parent::dbQuery("DELETE FROM users WHERE id = '$id'");
     }
     
+    public function listUsers() {
+	return parent::dbFetch("SELECT id, username, admin FROM users");
+    }
+    
     public function testLogin($username, $pass) {
 	$r = parent::dbFetch("SELECT id, admin FROM users WHERE username = '$username' AND password = '" . $this->salt($pass) . "'");
 	if (count($r) > 0) {

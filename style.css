@@ -44,6 +44,23 @@ body {
     cursor: pointer;
 }
 
+#cpTable {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#cpTable th {
+    background-color: #777;
+}
+
+#cpTable tr:nth-child(even) {
+    background-color: #222;
+}
+
+#cpTable tr:nth-child(odd) {
+    background-color: #444;
+}
+
 label {
     float: left;
 }

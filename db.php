@@ -50,7 +50,13 @@ class DB {
 	}
         
         public function checkError() {
-            return $_SESSION['error'] ? $_SESSION['msg'] : false;
+            $a = array();
+	    $a['success'] = $_SESSION['error'] ? false:true;
+            if ($_SESSION['error']) {
+                $a['error'] = $_SESSION['msg'];
+                $this->clearError();
+            }
+            return $a;
         }
         
         public function setError($msg) {

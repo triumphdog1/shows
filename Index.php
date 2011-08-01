@@ -78,4 +78,37 @@
     </div>
 </div>
 
+<div style="display:none">
+    <div id="cpDialog" title="User Management">
+	<div id="cpBody">
+	    <table>
+		<tr>
+		    <th style='padding-right:100px;'>Username</th><th>Admin</th>
+		</tr>
+		<tbody id="cpTable"></tbody>
+	    </table>
+	    <div id="passwords" style="display:none; margin-top:10px; margin-bottom:10px;">
+		<div style="clear:both"></div>
+		Password:<input type="password" id="pass1" style="float:right; width:150px;">
+		<div style="clear:both"></div>
+		Again:<input type="password" id="pass2" style="float:right; width:150px;">
+		<div style="clear:both"></div>
+	    </div>	    
+	    <div id='withSelected' style='margin-top:10px; margin-bottom:10px;'>
+		With Selected:
+		<select id='cpAction' style='float:right'>
+		    <option value=""></option>
+		    <option value="changePass">Change Pass</option>
+		    <option value="removeUser">Remove</option>
+		    <option value="makeAdmin">Make Admin</option>
+		    <option value="noAdmin">No Admin</option>
+		</select>
+	    </div>
+	    <div style='clear:both'></div>
+	    <input type=button id='cpAddButton' style='float:left' value='Add User'>
+	    <input type=button id='cpGoButton' style='float:right' value='Go'>
+	</div>
+    </div>
+</div>
+
 </html>

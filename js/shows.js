@@ -196,7 +196,7 @@ $(document).ready(function() {
                 }
         });
 
-        $('#login-button').click(function() {
+        $('#login-button').live('click', function() {
                 if ($('#login-button').attr('src') == 'images/login_button.gif') {
                         $('#login').dialog("open");
                 } else if ($('#login-button').attr('src') == 'images/logout_button.gif') {
@@ -239,8 +239,8 @@ $(document).ready(function() {
 	
 	$('#cpDialog').dialog({
 	    autoOpen: false,
-	    height: 500,
-	    width: 400, 
+	    width: 300,
+	    height: 'auto',
 	    draggable: false,
 	    resizable: false,
 	    modal: true,
@@ -248,6 +248,121 @@ $(document).ready(function() {
 	    closeText:"X"
 	});
 	
+	$('#cp-link').live('click', function() {
+	    cpReload();
+	    $('#cpDialog').dialog("open");
+	});
+	
+	$('#cpGoButton').live('click', function() {
+	    id = $('#userSelect:checked').val();
+	    action = $('#cpAction').val();
+	    var user = "";
+	    var admin = "";
+	    if (!id && action != 'addUser') {  //If no user is selected & not trying to add user
+		alert("You must select a user!");
+		return;
+	    }
+	    switch(action) {
+		case 'addUser':
+		    user = $('#userAdd').val();
+		    admin = $('#addUserAdmin').is(':checked') ? "1":"0";
+		    if (user == "") {
+			alert("You must enter a username to add a user!");
+			return;
+		    }
+		case 'changePass':
+		    if (!$('#passwords').is(':visible')) {  //checks to see if password boxes are already showing
+			$('#withSelected').hide();
+			$('#passwords').show();
+			$('#cpGoButton').val('Change');
+			$('#cpAddButton').val('Cancel');
+			return;
+		    } else {
+			if (!cpCheckNewPasswords()) return;
+			break;
+		    }
+		case 'removeUser':
+		    var user = $('#userSelect:checked').attr('rel');
+		    if (!confirm("Really delete user " + user + "?")) return;
+		    break;
+	    }
+	    $.post('ajax.php', {action: action, id: id, pass: $('#pass1').val(), user: user, addUserAdmin: admin}, function(data) {
+		if (!data.success) {
+		    alert(data.error);
+		} else {
+		    cpReload();
+		}
+	    }, 'json');
+	});
+	
+	
+	$('#cpAddButton').live('click', function() {
+	    if ($(this).val() == 'Cancel' && $('#cpGoButton').val() == "Change") {
+		$('#userSelect:checked').removeAttr('checked');
+		$('#passwords').hide();
+		$('#passwords input').val('');
+		$('#withSelected').show();
+		$(this).val('Add User');
+		$('#cpGoButton').val('Go');
+		return;
+	    }
+	    if ($('#cpTable tr:last').attr('id') == 'addUserRow') {  //check to see if already adding user
+		$('#cpTable tr:last').remove();
+		$('#passwords').hide();
+		$('#passwords > input').val('');
+		$('#cpAction option:selected').remove();
+		$('#withSelected').show();
+		$(this).val('Add User')
+		$('#cpGoButton').val('Go');
+	    } else {  // add user
+		$('#cpTable').append("<tr id='addUserRow'><td><input id='userAdd'></td><td><input type='checkbox' id='addUserAdmin'></td></tr>");
+		$('#withSelected').hide();
+		$('#cpAction').append("<option value='addUser' selected='selected'>add</option>");
+		$(this).val('Cancel')
+		$('#cpGoButton').val('Add');
+		$('#passwords').show();
+	    }
+	});
+	
+	function cpReload() {
+	    var html = "";
+	    $('#cpAction option:first-child').attr('selected', 'selected');
+	    $('#withSelected').show();
+	    $('#passwords').hide();
+	    $('#passwords > input').val('');
+	    if ($('#cpTable tr:last').attr('id') == 'addUserRow') {
+		$('#cpTable tr:last').remove();
+	    }
+	    $('#cpAddButton').val('Add User');
+	    $('#cpGoButton').val('Go');
+	    $.post('ajax.php', {'action': 'cpReload'}, function(data) {
+		if (!data.success) {
+		    html = data.error;
+		} else {
+		    $.each(data.rows, function(d, row) {
+			var a = row['admin'] == 1 ? "YES" : "NO";
+			html += "<tr><td><input type='radio' id='userSelect' name='userSelect' rel='" + row['username'] + "' value='" + row['id'] + "' />" + row['username'] + "</td><td>" + a + "</td></tr>";
+		    });
+		}
+		$('#cpTable').html(html);
+	    }, 'json');
+	}
+	
+	function cpCheckNewPasswords() {
+	    if ($('#pass1').val() == "" || $('#pass2').val() == "") {  //if password fields are empty
+		alert("You must enter a password in both fields!");
+		return false;
+	    }
+	    if ($('#pass1').val() != $('#pass2').val()) {  //if passwords do not match
+		alert("Your passwords do not match!");
+		return false;
+	    }
+	    if ($('#pass1').val().length < 6) {
+		alert("Your password must be at least 6 characters.");
+		return false;
+	    }
+	    return true;
+	}
 });
 
 
