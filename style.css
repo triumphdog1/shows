@@ -44,12 +44,12 @@ body {
     cursor: pointer;
 }
 
-#cpTable {
+#cpTableParent {
     margin-left: auto;
     margin-right: auto;
 }
 
-#cpTable th {
+#cpTableParent th {
     background-color: #777;
 }
 

@@ -256,7 +256,7 @@ $(document).ready(function() {
 	
 	$('#cpGoButton').live('click', function() {
 	    var a = {};
-	    a.id = $('#userSelect:checked').val();
+	    a.id = $('.userSelect:checked').val();
 	    a.action = $('#cpAction').val();
 	    if (!a.id && a.action != 'addUser') {  //If no user is selected & not trying to add user
 		alert("You must select a user!");
@@ -270,6 +270,7 @@ $(document).ready(function() {
 			alert("You must enter a username to add a user!");
 			return;
 		    }
+		    if (checkUserExists(a.user)) return;
 		case 'changePass':
 		    if (!$('#passwords').is(':visible')) {  //checks to see if password boxes are already showing
 			$('#withSelected').hide();
@@ -283,7 +284,7 @@ $(document).ready(function() {
 			break;
 		    }
 		case 'removeUser':
-		    a.user = $('#userSelect:checked').attr('rel');
+		    a.user = $('.userSelect:checked').attr('rel');
 		    if (!confirm("Really delete user " + a.user + "?")) return;
 		    break;
 	    }
@@ -299,12 +300,9 @@ $(document).ready(function() {
 	
 	
 	$('#cpAddButton').live('click', function() {
-	    if ($(this).val() == 'Cancel' && $('#cpGoButton').val() == "Change") {
+	    if ($(this).val() == 'Cancel') {
 		resetCP();
 		return;
-	    }
-	    if ($('#cpTable tr:last').attr('id') == 'addUserRow') {  //check to see if already adding user
-		resetCP();
 	    } else {
 		$('#cpTable').append("<tr id='addUserRow'><td><input id='userAdd'></td><td><input type='checkbox' id='addUserAdmin'></td></tr>");
 		$('#withSelected').hide();
@@ -324,7 +322,7 @@ $(document).ready(function() {
 		} else {
 		    $.each(data.rows, function(d, row) {
 			var a = row['admin'] == 1 ? "YES" : "NO";
-			html += "<tr><td><input type='radio' id='userSelect' name='userSelect' rel='" + row['username'] + "' value='" + row['id'] + "' />" + row['username'] + "</td><td>" + a + "</td></tr>";
+			html += "<tr><td><input type='radio' class='userSelect' rel='" + row['username'] + "' value='" + row['id'] + "' />" + row['username'] + "</td><td>" + a + "</td></tr>";
 		    });
 		}
 		$('#cpTable').html(html);
@@ -356,6 +354,17 @@ $(document).ready(function() {
 	    if ($('#cpAction').val() == 'addUser') $('#cpAction option:selected').remove();
 	    $('#cpAddButton').val('Add User');
 	    $('#cpGoButton').val('Go');
+	}
+	
+	function checkUserExists(user) {
+	    var found = false;
+	    $.each($('.userSelect'), function () {
+		if (user == $(this).attr('rel')) {
+		    alert("That username is already in use!");
+		    found = true;
+		}
+	    });
+	    return found;
 	}
 });
 

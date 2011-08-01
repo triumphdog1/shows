@@ -28,12 +28,19 @@ class Users extends DB {
 	return parent::dbFetch("SELECT id, username, admin FROM users");
     }
     
-    public function testLogin($username, $pass) {
-	$r = parent::dbFetch("SELECT id, admin FROM users WHERE username = '$username' AND password = '" . $this->salt($pass) . "'");
+    public function testLogin($user, $pass) {
+	$r = parent::dbFetch("SELECT id, admin FROM users WHERE username = '$user' AND password = '" . $this->salt($pass) . "'");
 	if (count($r) > 0) {
 	    if ($r[0]['admin'] == 1) return "admin";
 	    return true;
 	} else return false;
+    }
+    
+    public function userExists($user) {
+	$r = parent::dbFetch("SELECT username FROM users WHERE username = '$user'");
+	if (count($r) > 0) {
+	    return true;
+	}else return false;
     }
     
     public function salt($pass) {

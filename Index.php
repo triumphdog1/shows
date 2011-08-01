@@ -82,7 +82,7 @@
 <div style="display:none">
     <div id="cpDialog" title="User Management">
 	<div id="cpBody">
-	    <table>
+	    <table id="cpTableParent">
 		<tr>
 		    <th style='padding-right:100px;'>Username</th><th>Admin</th>
 		</tr>
