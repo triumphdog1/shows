@@ -1,6 +1,5 @@
 <?PHP
 
-require_once('auth.php');
 require_once('db.php');
 require_once('gig.php');
 require_once('users.php');

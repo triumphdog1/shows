@@ -1,5 +1,9 @@
 <?PHP
-require_once("auth.php");
+
+$dbuser = "tgbr";
+$dbpass = "tony";
+$db = "tgbr";
+
 class DB {
 
 	public function dbConnect() {
