@@ -15,7 +15,8 @@
 
 <body>
 	<div id="main">
-		<div id="login-link"><img id="login-button" src="images/login_button.gif"></div>
+		<div id="login-link"><img id="login-button" src="images/login_button.gif" /></div>
+		<span id="cp-link"><img id="cp-button" src="images/cp.png" width="18" height="18" title="Control Panel" /></span>
 		<br /><br />
 		<div id="header">Shows</div>
 		<br /><br />

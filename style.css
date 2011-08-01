@@ -38,6 +38,12 @@ body {
 	cursor: pointer;
 }
 
+#cp-link {
+    display: none;
+    padding-left: 10px;
+    cursor: pointer;
+}
+
 label {
     float: left;
 }

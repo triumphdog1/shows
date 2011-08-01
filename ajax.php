@@ -5,6 +5,7 @@ $action = isset($_POST['action']) ? $_POST['action'] : false;
 $shows = new Shows();
 $users = new Users();
 $logged_in = $shows->checkLoggedIn();
+$admin = $_SESSION['admin'];
 
 if ($action == 'next_show') {
 	echo $shows->nextShow();
@@ -17,10 +18,10 @@ if ($action == 'login') {
     $e = array();
     if ($a) {
 	$_SESSION['logged_in'] = true;
-	if ($a == "admin") {
+	if ($a === "admin") {
 	    $_SESSION['admin'] = true;
 	    $e['admin'] = true;
-	}
+	} else $e['admin'] = false;
 	$e['success'] = true;
     } else {
 	$_SESSION['logged_in'] = false;
@@ -75,14 +76,15 @@ if ($action == 'showsTable') {
 	$gigs = $shows->listAll();
     }
     if($gigs) {
+	$aReturn['logged_in'] = $logged_in;
+	$aReturn['admin'] = $admin;
+        $aReturn['success'] = true;
         if (count($gigs) > 0) { 
             foreach ($gigs as $gig) {
                 $aReturn['rows'][] = $gig->makeArray();
             }
-            $aReturn['logged_in'] = $logged_in;
-            $aReturn['success'] = true;
-            echo json_encode($aReturn);
         } else $aReturn['rows'] = false;
+	echo json_encode($aReturn);
     } else echo json_encode($shows->checkError());
 }
 

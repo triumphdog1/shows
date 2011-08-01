@@ -75,7 +75,9 @@ $(document).ready(function() {
             $.post('ajax.php', { 'action': 'showsTable' }, function(data) {
                     if (data.logged_in) {
                         $('#login-button').attr('src', 'images/logout_button.gif')
+			if (data.admin) $('#cp-link').show();
                     } else {
+			$('#cp-link').hide();
                         $('#login-button').attr('src', 'images/login_button.gif');
                         $('#login').dialog("open");
                     }
@@ -234,6 +236,18 @@ $(document).ready(function() {
                 }, 'json');
             }
         });
+	
+	$('#cpDialog').dialog({
+	    autoOpen: false,
+	    height: 500,
+	    width: 400, 
+	    draggable: false,
+	    resizable: false,
+	    modal: true,
+	    showButtonPanel: true,
+	    closeText:"X"
+	});
+	
 });
 
 
