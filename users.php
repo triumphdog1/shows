@@ -7,7 +7,7 @@ class Users extends DB {
     }
     
     public function changePass($id, $pass) {
-        return parent::dbQuery("UPDATE users SET password = '" . $this->salt(md5($pass)) . "' WHERE id = '$id'");
+        return parent::dbQuery("UPDATE users SET password = '" . $this->salt($pass) . "' WHERE id = '$id'");
     }
     
     public function isAdmin($id) {

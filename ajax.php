@@ -14,7 +14,7 @@ if ($action == 'next_show') {
 if ($action == 'login') {
     $user = $_POST['username'];
     $pass = $_POST['password'];
-    $a = $users->testLogin($user, md5($pass));
+    $a = $users->testLogin($user, $pass);
     $e = array();
     if ($a) {
 	$_SESSION['logged_in'] = true;
@@ -126,7 +126,7 @@ if ($action == 'changePass' && $logged_in) {
 }
 
 if ($action == 'addUser' && $logged_in && $admin) {
-    $users->addUser($_POST['user'], md5($_POST['pass']), $_POST['addUserAdmin']);
+    $users->addUser($_POST['user'], $_POST['pass'], $_POST['addUserAdmin']);
     echo json_encode($users->checkError());
 }
 

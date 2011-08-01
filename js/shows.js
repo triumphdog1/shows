@@ -167,6 +167,7 @@ $(document).ready(function() {
         $('#loginForm').submit(function(e) {
             e.preventDefault();
             if ($('#loginForm').valid()) {
+		$('#password').val( MD5( $('#password').val() ) );  // MD5 password before post
                 $.post("ajax.php", $('#loginForm').serialize(), function(data) {
                         if (data.success) {
                                 reloadTable();
@@ -278,7 +279,7 @@ $(document).ready(function() {
 			return;
 		    } else {
 			if (!cpCheckNewPasswords()) return;
-			a.pass = $('#pass1').val();
+			a.pass = MD5($('#pass1').val());
 			break;
 		    }
 		case 'removeUser':
@@ -303,9 +304,8 @@ $(document).ready(function() {
 		return;
 	    }
 	    if ($('#cpTable tr:last').attr('id') == 'addUserRow') {  //check to see if already adding user
-		$('#cpAction option:selected').remove();
 		resetCP();
-	    } else {  // add user
+	    } else {
 		$('#cpTable').append("<tr id='addUserRow'><td><input id='userAdd'></td><td><input type='checkbox' id='addUserAdmin'></td></tr>");
 		$('#withSelected').hide();
 		$('#cpAction').append("<option value='addUser' selected='selected'>add</option>");
