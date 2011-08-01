@@ -105,25 +105,19 @@ if ($action == 'cpReload') {
     }
 }
 
-if ($action == 'removeUser') {
-    if ($logged_in && $admin) {
-	$users->removeUser($_POST['id']);
-	echo json_encode($shows->checkError());
-    }
+if ($action == 'removeUser' && $logged_in && $admin) {
+    $users->removeUser($_POST['id']);
+    echo json_encode($shows->checkError());
 }
 
-if ($action == 'makeAdmin') {
-    if ($logged_in && $admin) {
-	$users->setAdmin($_POST['id'], 1);
-	echo json_encode($shows->checkError());
-    }
+if ($action == 'makeAdmin' && $logged_in && $admin) {
+    $users->setAdmin($_POST['id'], 1);
+    echo json_encode($shows->checkError());
 }
 
-if ($action == 'noAdmin') {
-    if ($logged_in && $admin) {
-	$users->setAdmin($_POST['id'], 0);
-	echo json_encode($shows->checkError());
-    }
+if ($action == 'noAdmin' && $logged_in && $admin) {
+    $users->setAdmin($_POST['id'], 0);
+    echo json_encode($shows->checkError());
 }
 
 if ($action == 'changePass' && $logged_in) {

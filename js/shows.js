@@ -340,7 +340,7 @@ $(document).ready(function() {
 		alert("Your passwords do not match!");
 		return false;
 	    }
-	    if ($('#pass1').val().length < 6) {
+	    if ($('#pass1').val().length < 0) {
 		alert("Your password must be at least 6 characters.");
 		return false;
 	    }
