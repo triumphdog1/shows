@@ -254,19 +254,18 @@ $(document).ready(function() {
 	});
 	
 	$('#cpGoButton').live('click', function() {
-	    id = $('#userSelect:checked').val();
-	    action = $('#cpAction').val();
-	    var user = "";
-	    var admin = "";
-	    if (!id && action != 'addUser') {  //If no user is selected & not trying to add user
+	    var a = {};
+	    a.id = $('#userSelect:checked').val();
+	    a.action = $('#cpAction').val();
+	    if (!a.id && a.action != 'addUser') {  //If no user is selected & not trying to add user
 		alert("You must select a user!");
 		return;
 	    }
-	    switch(action) {
+	    switch(a.action) {
 		case 'addUser':
-		    user = $('#userAdd').val();
-		    admin = $('#addUserAdmin').is(':checked') ? "1":"0";
-		    if (user == "") {
+		    a.user = $('#userAdd').val();
+		    a.admin = $('#addUserAdmin').is(':checked') ? "1":"0";
+		    if (a.user == "") {
 			alert("You must enter a username to add a user!");
 			return;
 		    }
@@ -279,14 +278,16 @@ $(document).ready(function() {
 			return;
 		    } else {
 			if (!cpCheckNewPasswords()) return;
+			a.pass = $('#pass1').val();
 			break;
 		    }
 		case 'removeUser':
-		    var user = $('#userSelect:checked').attr('rel');
-		    if (!confirm("Really delete user " + user + "?")) return;
+		    a.user = $('#userSelect:checked').attr('rel');
+		    if (!confirm("Really delete user " + a.user + "?")) return;
 		    break;
 	    }
-	    $.post('ajax.php', {action: action, id: id, pass: $('#pass1').val(), user: user, addUserAdmin: admin}, function(data) {
+	    
+	    $.post('ajax.php', a, function(data) {
 		if (!data.success) {
 		    alert(data.error);
 		} else {
@@ -298,22 +299,12 @@ $(document).ready(function() {
 	
 	$('#cpAddButton').live('click', function() {
 	    if ($(this).val() == 'Cancel' && $('#cpGoButton').val() == "Change") {
-		$('#userSelect:checked').removeAttr('checked');
-		$('#passwords').hide();
-		$('#passwords input').val('');
-		$('#withSelected').show();
-		$(this).val('Add User');
-		$('#cpGoButton').val('Go');
+		resetCP();
 		return;
 	    }
 	    if ($('#cpTable tr:last').attr('id') == 'addUserRow') {  //check to see if already adding user
-		$('#cpTable tr:last').remove();
-		$('#passwords').hide();
-		$('#passwords > input').val('');
 		$('#cpAction option:selected').remove();
-		$('#withSelected').show();
-		$(this).val('Add User')
-		$('#cpGoButton').val('Go');
+		resetCP();
 	    } else {  // add user
 		$('#cpTable').append("<tr id='addUserRow'><td><input id='userAdd'></td><td><input type='checkbox' id='addUserAdmin'></td></tr>");
 		$('#withSelected').hide();
@@ -326,15 +317,7 @@ $(document).ready(function() {
 	
 	function cpReload() {
 	    var html = "";
-	    $('#cpAction option:first-child').attr('selected', 'selected');
-	    $('#withSelected').show();
-	    $('#passwords').hide();
-	    $('#passwords > input').val('');
-	    if ($('#cpTable tr:last').attr('id') == 'addUserRow') {
-		$('#cpTable tr:last').remove();
-	    }
-	    $('#cpAddButton').val('Add User');
-	    $('#cpGoButton').val('Go');
+	    resetCP();
 	    $.post('ajax.php', {'action': 'cpReload'}, function(data) {
 		if (!data.success) {
 		    html = data.error;
@@ -362,6 +345,17 @@ $(document).ready(function() {
 		return false;
 	    }
 	    return true;
+	}
+	
+	function resetCP() {
+	    $('#cpAction option:first-child').attr('selected', 'selected');
+	    $('#withSelected').show();
+	    $('#passwords').hide();
+	    $('#passwords > input').val('');
+	    if ($('#cpTable tr:last').attr('id') == 'addUserRow') $('#cpTable tr:last').remove();  // if add user field exists, delte it
+	    if ($('#cpAction').val() == 'addUser') $('#cpAction option:selected').remove();
+	    $('#cpAddButton').val('Add User');
+	    $('#cpGoButton').val('Go');
 	}
 });
 
