@@ -24,7 +24,6 @@
 		<div id="showsTable"></div>
                 <div align="center">
                     <br /><br /><br /><br /><br /><br />
-                    <a href="../Shows.html"><img src="images/back.png"></a>
                 </div>
 	</div>
 </body>

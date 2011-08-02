@@ -79,7 +79,6 @@ $(document).ready(function() {
                     } else {
 			$('#cp-link').hide();
                         $('#login-button').attr('src', 'images/login_button.gif');
-                        $('#login').dialog("open");
                     }
                     if (data.success) {
                         var s = "";
@@ -168,6 +167,7 @@ $(document).ready(function() {
             e.preventDefault();
             if ($('#loginForm').valid()) {
 		$('#password').val( MD5( $('#password').val() ) );  // MD5 password before post
+		alert('test');
                 $.post("ajax.php", $('#loginForm').serialize(), function(data) {
                         if (data.success) {
                                 reloadTable();
