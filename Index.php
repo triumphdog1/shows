@@ -89,9 +89,9 @@
 	    </table>
 	    <div id="passwords" style="display:none; margin-top:10px; margin-bottom:10px;">
 		<div style="clear:both"></div>
-		Password:<input type="password" id="pass1" style="float:right; width:150px;">
+		Password:<input type="password" id="pass1" style="float:right; width:150px;" class="addUserFields">
 		<div style="clear:both"></div>
-		Again:<input type="password" id="pass2" style="float:right; width:150px;">
+		Again:<input type="password" id="pass2" style="float:right; width:150px;" class="addUserFields">
 		<div style="clear:both"></div>
 	    </div>	    
 	    <div id='withSelected' style='margin-top:10px; margin-bottom:10px;'>

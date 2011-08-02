@@ -276,6 +276,7 @@ $(document).ready(function() {
 			$('#passwords').show();
 			$('#cpGoButton').val('Change');
 			$('#cpAddButton').val('Cancel');
+			$('#pass1').focus();
 			return;
 		    } else {
 			if (!cpCheckNewPasswords()) return;
@@ -303,7 +304,9 @@ $(document).ready(function() {
 		resetCP();
 		return;
 	    } else {
-		$('#cpTable').append("<tr id='addUserRow'><td><input id='userAdd'></td><td><input type='checkbox' id='addUserAdmin'></td></tr>");
+		$('.userSelect:checked').attr('checked', false);
+		$('#cpTable').append("<tr id='addUserRow'><td><input id='userAdd' class='addUserFields'></td><td><input type='checkbox' id='addUserAdmin'></td></tr>");
+		$('#userAdd').focus();
 		$('#withSelected').hide();
 		$('#cpAction').append("<option value='addUser' selected='selected'>add</option>");
 		$(this).val('Cancel')
@@ -349,11 +352,18 @@ $(document).ready(function() {
 	    $('#withSelected').show();
 	    $('#passwords').hide();
 	    $('#passwords > input').val('');
-	    if ($('#cpTable tr:last').attr('id') == 'addUserRow') $('#cpTable tr:last').remove();  // if add user field exists, delte it
+	    if ($('#cpTable tr:last').attr('id') == 'addUserRow') $('#cpTable tr:last').remove();  // if add user field exists, delete it
 	    if ($('#cpAction').val() == 'addUser') $('#cpAction option:selected').remove();
 	    $('#cpAddButton').val('Add User');
 	    $('#cpGoButton').val('Go');
+	    $('.userSelect:checked').attr('checked', false);
 	}
+	
+	$('.addUserFields').live( 'keydown', function(e) {
+            if(e.keyCode == 13) {       
+                $('#cpGoButton').click();
+            }
+        });
 	
 	function checkUserExists(user) {
 	    var found = false;
