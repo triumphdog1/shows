@@ -357,7 +357,7 @@ $(document).ready(function() {
 	    $('#cpAddButton').val('Add User');
 	    $('#cpGoButton').val('Go');
 	    $('.userSelect:checked').attr('checked', false);
-	}
+	} 
 	
 	$('.addUserFields').live( 'keydown', function(e) {
             if(e.keyCode == 13) {       
