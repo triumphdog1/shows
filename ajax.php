@@ -130,7 +130,7 @@ if ($action == 'addUser' && $logged_in && $admin) {
 	$users->addUser($_POST['user'], $_POST['pass'], $_POST['addUserAdmin']);
 	echo json_encode($users->checkError());
     } else {
-	$r = new array();
+	$r = array();
 	$r['success'] = false;
 	$r['error'] = "That username already exists!";
 	echo json_encode($r);

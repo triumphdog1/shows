@@ -322,7 +322,7 @@ $(document).ready(function() {
 		} else {
 		    $.each(data.rows, function(d, row) {
 			var a = row['admin'] == 1 ? "YES" : "NO";
-			html += "<tr><td><input type='radio' class='userSelect' rel='" + row['username'] + "' value='" + row['id'] + "' />" + row['username'] + "</td><td>" + a + "</td></tr>";
+			html += "<tr><td><input type='radio' name='userSelect' class='userSelect' rel='" + row['username'] + "' value='" + row['id'] + "' />" + row['username'] + "</td><td>" + a + "</td></tr>";
 		    });
 		}
 		$('#cpTable').html(html);

@@ -2,8 +2,9 @@
 require_once("db.php");
 class Users extends DB {
     
-    public function addUser($username, $password, $admin=0) {
-        return parent::dbQuery("INSERT INTO users (username, password, admin) VALUES('$username', '" . $this->salt($password) . "', '$admin')");
+    public function addUser($user, $pass, $admin=0) {
+	$user = htmlentities($user, ENT_QUOTES);
+        return parent::dbQuery("INSERT INTO users (username, password, admin) VALUES('$user', '" . $this->salt($pass) . "', '$admin')");
     }
     
     public function changePass($id, $pass) {
@@ -25,10 +26,15 @@ class Users extends DB {
     }
     
     public function listUsers() {
-	return parent::dbFetch("SELECT id, username, admin FROM users");
+	$r = parent::dbFetch("SELECT id, username, admin FROM users");
+	foreach ($r as $row) {
+	    $row['username'] = html_entity_decode($row['username']);
+	}
+	return $r;
     }
     
     public function testLogin($user, $pass) {
+	$user = htmlentities($user, ENT_QUOTES);
 	$r = parent::dbFetch("SELECT id, admin FROM users WHERE username = '$user' AND password = '" . $this->salt($pass) . "'");
 	if (count($r) > 0) {
 	    if ($r[0]['admin'] == 1) return "admin";
@@ -37,6 +43,7 @@ class Users extends DB {
     }
     
     public function userExists($user) {
+	$user = htmlentities($user, ENT_QUOTES);
 	$r = parent::dbFetch("SELECT username FROM users WHERE username = '$user'");
 	if (count($r) > 0) {
 	    return true;
