@@ -1,4 +1,4 @@
-<?
+<?php
 
 require_once("shows.php");
 $action = isset($_POST['action']) ? $_POST['action'] : false;

@@ -1,4 +1,4 @@
-<?PHP
+<?php
 
 $dbuser = "tgbr";
 $dbpass = "tony";
